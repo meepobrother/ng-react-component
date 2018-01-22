@@ -20,8 +20,9 @@ export declare class ReactComponent<P, T> {
 }
 ```
 
-- 使用
+- 使用 
 
+### some.html
 ```html
 <h2>{{props.title}}</h2>
 <div *ngIf="state.loading"></div>
@@ -34,6 +35,7 @@ export declare class ReactComponent<P, T> {
 <div *ngIf="(state$|async).loading"></div>
 ```
 
+### some.ts
 ```ts
 export interface SomeProps{
     title: string;
@@ -41,20 +43,55 @@ export interface SomeProps{
 export interface SomeState{
     loading: boolean;
 }
+@Component({
+    selector: 'some-com',
+    templateUrl: './some.html'
+})
 export class SomeComponennt extends ReactComponent<SomeProps,SomeState> implements OnInit{
-    constructor(){
-        this.setState({
-            loading: true
-        });
+    constructor(){ 
+        super();
+    }
+
+    ngOnInit(){}
+
+    changeTitle(){
         this.setProps({
             title: '测试使用'
         });
     }
 
-    ngOnInit(){
+    hideLoading(){
         this.setState({
             loading: false
-        })
+        });
+    }
+}
+```
+
+### app.component.html
+
+```html
+<some-com [props]="props" [state]="state" (propsChange)="_propsChange($event)" (propsChange)="_stateChange($event)"></some-com>
+```
+
+### app.component.ts
+
+```ts
+export class AppComponent {
+    props: SomeProps = {
+        title: 'some title'
+    }
+
+    state: SomeState = {
+        loading: true
+    }
+
+    _propsChange(props: SomeProps){
+        console.log(props);
+    }
+
+    _stateChange(state: SomeState){
+        console.log(state);
     }
 }
 ```
