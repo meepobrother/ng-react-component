@@ -83,11 +83,11 @@ export class SomeComponennt extends ReactComponent<SomeProps,SomeState> implemen
         });
     }
 
-    onPropsChange(changes: KeyValueChanges<string, any>){
+    onPropsChange(changes: KeyValueChanges<string, SomeProps>){
 
     }
-    onStateChange(changes: KeyValueChanges<string, any>){
-        
+    onStateChange(changes: KeyValueChanges<string, SomeState>){
+
     }
 
     getDefaultProps(): SomeProps{
