@@ -1,17 +1,29 @@
 import { EventEmitter } from '@angular/core';
+import { KeyValueChanges, KeyValueDiffers } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
-export declare class ReactComponent<P, T> {
+export interface KeyValue {
+    [key: string]: any;
+}
+export declare abstract class ReactComponent<P extends KeyValue, T extends KeyValue> {
+    private _differs;
     private _state;
     state: T;
-    readonly state$: Observable<T>;
+    readonly state$: Observable<KeyValue>;
     private _props;
     props: P;
     readonly props$: Observable<P>;
     stateChange: EventEmitter<T>;
     propsChange: EventEmitter<P>;
-    constructor();
-    private _extends(dest, source);
-    setState(state: T): void;
-    setProps(props: P): void;
+    private _stateDiffer;
+    private _propsDiffer;
+    constructor(_differs: KeyValueDiffers);
+    setState(state: T, key?: string): Observable<KeyValue>;
+    setProps(props: P, key?: string): Observable<P>;
+    private _stateChanges();
+    private _propsChanges();
+    abstract onPropsChange(changes: KeyValueChanges<string, any>): void;
+    abstract onStateChange(changes: KeyValueChanges<string, any>): void;
+    abstract getDefaultProps(): P;
+    abstract getInitialState(): T;
 }

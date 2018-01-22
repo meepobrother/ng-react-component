@@ -10,7 +10,7 @@ import 'rxjs/add/operator/share';
  * @return {?}
  */
 function defaults(target, options) {
-    if (target == null || (typeof target !== 'object' && typeof target !== 'function')) {
+    if (target === null || (typeof target !== 'object' && typeof target !== 'function')) {
         target = {};
     }
     if (options) {
@@ -18,8 +18,18 @@ function defaults(target, options) {
     }
     return target;
 }
-var ReactComponent = (function () {
-    function ReactComponent() {
+/**
+ * @record
+ */
+/**
+ * @abstract
+ */
+var ReactComponent = /** @class */ (function () {
+    /**
+     * @param {?} _differs
+     */
+    function ReactComponent(_differs) {
+        this._differs = _differs;
         this.stateChange = new EventEmitter();
         this.propsChange = new EventEmitter();
     }
@@ -28,17 +38,14 @@ var ReactComponent = (function () {
          * @return {?}
          */
         get: function () {
-            return this._state || ({});
+            return /** @type {?} */ (defaults(this.getInitialState(), this._props));
         },
         /**
          * @param {?} val
          * @return {?}
          */
         set: function (val) {
-            if (val && val !== this._state) {
-                this._state = val;
-                this.stateChange.emit(this._state);
-            }
+            this._state = val;
         },
         enumerable: true,
         configurable: true
@@ -58,17 +65,14 @@ var ReactComponent = (function () {
          * @return {?}
          */
         get: function () {
-            return this._props || ({});
+            return /** @type {?} */ (defaults(this.getDefaultProps(), this._props));
         },
         /**
          * @param {?} val
          * @return {?}
          */
         set: function (val) {
-            if (val && val !== this._props) {
-                this._props = val;
-                this.propsChange.emit(this._props);
-            }
+            this._props = val;
         },
         enumerable: true,
         configurable: true
@@ -84,26 +88,48 @@ var ReactComponent = (function () {
         configurable: true
     });
     /**
-     * @param {?} dest
-     * @param {?} source
-     * @return {?}
-     */
-    ReactComponent.prototype._extends = function (dest, source) {
-        return Object.assign({}, dest, source);
-    };
-    /**
      * @param {?} state
+     * @param {?=} key
      * @return {?}
      */
-    ReactComponent.prototype.setState = function (state) {
-        this.state = defaults(state, this._state);
+    ReactComponent.prototype.setState = function (state, key) {
+        this._stateChanges();
+        this.state = /** @type {?} */ (defaults(this.state, state));
+        var /** @type {?} */ diffter = this._stateDiffer.diff(this.state);
+        if (diffter) {
+            this.onStateChange(diffter);
+            this.stateChange.emit(this.state);
+        }
+        return this.state$;
     };
     /**
      * @param {?} props
+     * @param {?=} key
      * @return {?}
      */
-    ReactComponent.prototype.setProps = function (props) {
-        this.props = defaults(props, /** @type {?} */ (this._props));
+    ReactComponent.prototype.setProps = function (props, key) {
+        this._propsChanges();
+        this.props = /** @type {?} */ (defaults(this.props, props));
+        var /** @type {?} */ diffter = this._propsDiffer.diff(this.props);
+        if (diffter) {
+            this.onPropsChange(diffter);
+            this.propsChange.emit(this.props);
+        }
+        return this.props$;
+    };
+    /**
+     * @return {?}
+     */
+    ReactComponent.prototype._stateChanges = function () {
+        this._stateDiffer = this._differs.find(this.state).create();
+        return this._stateDiffer.diff(this.state);
+    };
+    /**
+     * @return {?}
+     */
+    ReactComponent.prototype._propsChanges = function () {
+        this._propsDiffer = this._differs.find(this.props).create();
+        return this._propsDiffer.diff(this.props);
     };
     return ReactComponent;
 }());
