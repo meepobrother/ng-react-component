@@ -1,0 +1,20 @@
+{
+    "name": "ng-react-component",
+    "version": "1.0.0-alpha.0",
+    "repository": "https://github.com/meepobrother/ng-react-component.git",
+    "author": "david <david@spektrakel.de>",
+    "license": "MIT",
+    "private": false,
+    "peerDependencies": {
+        "@angular/core": "*",
+        "rxjs": "*"
+    },
+    "ngPackage": {
+        "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
+        "dest": "../dist",
+        "workingDirectory": "./.ng_build",
+        "lib": {
+            "entryFile": "./index.ts"
+        }
+    }
+}

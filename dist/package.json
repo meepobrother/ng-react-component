@@ -1,0 +1,17 @@
+{
+  "name": "ng-react-component",
+  "version": "1.0.0-alpha.0",
+  "repository": "https://github.com/meepobrother/ng-react-component.git",
+  "author": "david <david@spektrakel.de>",
+  "license": "MIT",
+  "private": false,
+  "peerDependencies": {
+    "@angular/core": "*",
+    "rxjs": "*"
+  },
+  "main": "bundles/ng-react-component.umd.js",
+  "module": "esm5/ng-react-component.js",
+  "es2015": "esm2015/ng-react-component.js",
+  "typings": "ng-react-component.d.ts",
+  "metadata": "ng-react-component.metadata.json"
+}
