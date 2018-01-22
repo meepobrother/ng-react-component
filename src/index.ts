@@ -1,3 +1,4 @@
+
 import { EventEmitter, NgZone, Input, Output, KeyValueDiffer } from '@angular/core';
 import { OnChanges, KeyValueChanges, DoCheck, KeyValueDiffers } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
@@ -22,7 +23,7 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> {
         this._state = val;
     }
     get state(): T {
-        return defaults(this.getInitialState(), this._props) as T;
+        return defaults(this.getInitialState(), this._state) as T;
     }
     get state$(): Observable<KeyValue> {
         return this.stateChange.share();
@@ -45,7 +46,7 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> {
     constructor(
         private _differs: KeyValueDiffers
     ) { }
-    setState(state: T, key?: string): Observable<KeyValue> {
+    setState(state: T): Observable<KeyValue> {
         this._stateChanges();
         this.state = defaults(this.state, state) as T;
         const diffter = this._stateDiffer.diff(this.state);
@@ -55,7 +56,7 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> {
         }
         return this.state$;
     }
-    setProps(props: P, key?: string): Observable<P> {
+    setProps(props: P): Observable<P> {
         this._propsChanges();
         this.props = defaults(this.props, props) as P;
         const diffter = this._propsDiffer.diff(this.props);
