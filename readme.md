@@ -37,6 +37,7 @@ export declare class ReactComponent<P, T> {
 
 ### some.ts
 ```ts
+import { ReactComponent } from 'ng-react-component';
 export interface SomeProps{
     title: string;
 }
