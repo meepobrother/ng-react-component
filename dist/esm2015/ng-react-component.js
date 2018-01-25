@@ -34,40 +34,14 @@ class ReactComponent {
         this._differs = _differs;
         this.stateChange = new EventEmitter();
         this.propsChange = new EventEmitter();
-        this._props = /** @type {?} */ ({});
-        this._state = /** @type {?} */ ({});
-    }
-    /**
-     * @param {?} val
-     * @return {?}
-     */
-    set state(val) {
-        this.setState(val);
-    }
-    /**
-     * @return {?}
-     */
-    get state() {
-        return this._state;
+        this.props = /** @type {?} */ ({});
+        this.state = /** @type {?} */ ({});
     }
     /**
      * @return {?}
      */
     get state$() {
         return this.stateChange.share();
-    }
-    /**
-     * @param {?} val
-     * @return {?}
-     */
-    set props(val) {
-        this.setProps(val);
-    }
-    /**
-     * @return {?}
-     */
-    get props() {
-        return this._props;
     }
     /**
      * @return {?}
@@ -80,42 +54,63 @@ class ReactComponent {
      * @return {?}
      */
     setState(state) {
-        this._stateChanges();
-        this._state = /** @type {?} */ (defaults(this._state, state));
-        const /** @type {?} */ diffter = this._stateDiffer.diff(this._state);
-        if (diffter) {
-            this.onStateChange(diffter);
-            this.stateChange.emit(this._state);
-        }
-        return this.state$;
+        this._stateDiffer = this._differs.find(this.state).create();
+        this.state = /** @type {?} */ (defaults(this.state, state));
+        this.ngDoCheck();
     }
     /**
      * @param {?} props
      * @return {?}
      */
     setProps(props) {
-        this._propsChanges();
-        this._props = /** @type {?} */ (defaults(this._props, props));
-        const /** @type {?} */ diffter = this._propsDiffer.diff(this._props);
-        if (diffter) {
-            this.onPropsChange(diffter);
-            this.propsChange.emit(this._props);
+        this._propsDiffer = this._differs.find(this.props).create();
+        this.props = /** @type {?} */ (defaults(this.props, props));
+        this.ngDoCheck();
+    }
+    /**
+     * @param {?} changes
+     * @return {?}
+     */
+    ngOnChanges(changes) {
+        if ('props' in changes) {
+            const /** @type {?} */ value = changes['props'].currentValue;
+            this._propsDiffer = this._differs.find(value).create();
         }
-        return this.props$;
+        if ('state' in changes) {
+            const /** @type {?} */ value = changes['state'].currentValue;
+            this._stateDiffer = this._differs.find(value).create();
+        }
     }
     /**
      * @return {?}
      */
-    _stateChanges() {
-        this._stateDiffer = this._differs.find(this._state).create();
-        return this._stateDiffer.diff(this._state);
+    ngDoCheck() {
+        if (this._propsDiffer) {
+            const /** @type {?} */ changes = this._propsDiffer.diff(this.props);
+            if (changes)
+                this._propsChanges(changes);
+        }
+        if (this._stateDiffer) {
+            const /** @type {?} */ changes = this._stateDiffer.diff(this.state);
+            if (changes)
+                this._stateChanges(changes);
+        }
     }
     /**
+     * @param {?} changes
      * @return {?}
      */
-    _propsChanges() {
-        this._propsDiffer = this._differs.find(this._props).create();
-        return this._propsDiffer.diff(this._props);
+    _stateChanges(changes) {
+        this.onStateChange(changes);
+        this.stateChange.emit(this.state);
+    }
+    /**
+     * @param {?} changes
+     * @return {?}
+     */
+    _propsChanges(changes) {
+        this.onPropsChange(changes);
+        this.propsChange.emit(this.props);
     }
 }
 ReactComponent.propDecorators = {

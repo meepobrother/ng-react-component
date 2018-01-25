@@ -36,49 +36,15 @@ var ReactComponent = /** @class */ (function () {
         this._differs = _differs;
         this.stateChange = new core.EventEmitter();
         this.propsChange = new core.EventEmitter();
-        this._props = /** @type {?} */ ({});
-        this._state = /** @type {?} */ ({});
+        this.props = /** @type {?} */ ({});
+        this.state = /** @type {?} */ ({});
     }
-    Object.defineProperty(ReactComponent.prototype, "state", {
-        /**
-         * @return {?}
-         */
-        get: function () {
-            return this._state;
-        },
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) {
-            this.setState(val);
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(ReactComponent.prototype, "state$", {
         /**
          * @return {?}
          */
         get: function () {
             return this.stateChange.share();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ReactComponent.prototype, "props", {
-        /**
-         * @return {?}
-         */
-        get: function () {
-            return this._props;
-        },
-        /**
-         * @param {?} val
-         * @return {?}
-         */
-        set: function (val) {
-            this.setProps(val);
         },
         enumerable: true,
         configurable: true
@@ -98,42 +64,63 @@ var ReactComponent = /** @class */ (function () {
      * @return {?}
      */
     ReactComponent.prototype.setState = function (state) {
-        this._stateChanges();
-        this._state = /** @type {?} */ (defaults(this._state, state));
-        var /** @type {?} */ diffter = this._stateDiffer.diff(this._state);
-        if (diffter) {
-            this.onStateChange(diffter);
-            this.stateChange.emit(this._state);
-        }
-        return this.state$;
+        this._stateDiffer = this._differs.find(this.state).create();
+        this.state = /** @type {?} */ (defaults(this.state, state));
+        this.ngDoCheck();
     };
     /**
      * @param {?} props
      * @return {?}
      */
     ReactComponent.prototype.setProps = function (props) {
-        this._propsChanges();
-        this._props = /** @type {?} */ (defaults(this._props, props));
-        var /** @type {?} */ diffter = this._propsDiffer.diff(this._props);
-        if (diffter) {
-            this.onPropsChange(diffter);
-            this.propsChange.emit(this._props);
+        this._propsDiffer = this._differs.find(this.props).create();
+        this.props = /** @type {?} */ (defaults(this.props, props));
+        this.ngDoCheck();
+    };
+    /**
+     * @param {?} changes
+     * @return {?}
+     */
+    ReactComponent.prototype.ngOnChanges = function (changes) {
+        if ('props' in changes) {
+            var /** @type {?} */ value = changes['props'].currentValue;
+            this._propsDiffer = this._differs.find(value).create();
         }
-        return this.props$;
+        if ('state' in changes) {
+            var /** @type {?} */ value = changes['state'].currentValue;
+            this._stateDiffer = this._differs.find(value).create();
+        }
     };
     /**
      * @return {?}
      */
-    ReactComponent.prototype._stateChanges = function () {
-        this._stateDiffer = this._differs.find(this._state).create();
-        return this._stateDiffer.diff(this._state);
+    ReactComponent.prototype.ngDoCheck = function () {
+        if (this._propsDiffer) {
+            var /** @type {?} */ changes = this._propsDiffer.diff(this.props);
+            if (changes)
+                this._propsChanges(changes);
+        }
+        if (this._stateDiffer) {
+            var /** @type {?} */ changes = this._stateDiffer.diff(this.state);
+            if (changes)
+                this._stateChanges(changes);
+        }
     };
     /**
+     * @param {?} changes
      * @return {?}
      */
-    ReactComponent.prototype._propsChanges = function () {
-        this._propsDiffer = this._differs.find(this._props).create();
-        return this._propsDiffer.diff(this._props);
+    ReactComponent.prototype._stateChanges = function (changes) {
+        this.onStateChange(changes);
+        this.stateChange.emit(this.state);
+    };
+    /**
+     * @param {?} changes
+     * @return {?}
+     */
+    ReactComponent.prototype._propsChanges = function (changes) {
+        this.onPropsChange(changes);
+        this.propsChange.emit(this.props);
     };
     return ReactComponent;
 }());

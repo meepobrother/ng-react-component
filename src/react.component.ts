@@ -1,6 +1,6 @@
 
 import { EventEmitter, NgZone, Input, Output, KeyValueDiffer } from '@angular/core';
-import { OnChanges, KeyValueChanges, DoCheck, KeyValueDiffers } from '@angular/core';
+import { OnChanges, KeyValueChanges, DoCheck, KeyValueDiffers, SimpleChanges } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
 
@@ -16,26 +16,12 @@ function defaults(target: any, options: any): KeyValue {
 export interface KeyValue {
     [key: string]: any;
 }
-export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> {
-    private _state: T;
-    @Input()
-    set state(val: T) {
-        this.setState(val);
-    }
-    get state(): T {
-        return this._state;
-    }
+export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> implements OnChanges, DoCheck {
+    @Input() state: T;
     get state$(): Observable<KeyValue> {
         return this.stateChange.share();
     }
-    private _props: P;
-    @Input()
-    set props(val: P) {
-        this.setProps(val);
-    }
-    get props(): P {
-        return this._props;
-    }
+    @Input() props: P;
     get props$(): Observable<P> {
         return this.propsChange.share();
     }
@@ -46,40 +32,52 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> {
     constructor(
         private _differs: KeyValueDiffers
     ) {
-        this._props = {} as P;
-        this._state = {} as T;
-
+        this.props = {} as P;
+        this.state = {} as T;
     }
 
-    setState(state: T): Observable<KeyValue> {
-        this._stateChanges();
-        this._state = defaults(this._state, state) as T;
-        const diffter = this._stateDiffer.diff(this._state);
-        if (diffter) {
-            this.onStateChange(diffter);
-            this.stateChange.emit(this._state);
+    setState(state: T): void {
+        this._stateDiffer = this._differs.find(this.state).create();
+        this.state = defaults(this.state, state) as T;
+        this.ngDoCheck();
+    }
+
+    setProps(props: P): void {
+        this._propsDiffer = this._differs.find(this.props).create();
+        this.props = defaults(this.props, props) as P;
+        this.ngDoCheck();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if ('props' in changes) {
+            const value = changes['props'].currentValue;
+            this._propsDiffer = this._differs.find(value).create();
         }
-        return this.state$;
+        if ('state' in changes) {
+            const value = changes['state'].currentValue;
+            this._stateDiffer = this._differs.find(value).create();
+        }
     }
 
-    setProps(props: P): Observable<P> {
-        this._propsChanges();
-        this._props = defaults(this._props, props) as P;
-        const diffter = this._propsDiffer.diff(this._props);
-        if (diffter) {
-            this.onPropsChange(diffter);
-            this.propsChange.emit(this._props);
+    ngDoCheck(): void {
+        if (this._propsDiffer) {
+            const changes = this._propsDiffer.diff(this.props);
+            if (changes) this._propsChanges(changes);
         }
-        return this.props$;
+        if (this._stateDiffer) {
+            const changes = this._stateDiffer.diff(this.state);
+            if (changes) this._stateChanges(changes);
+        }
     }
-    private _stateChanges() {
-        this._stateDiffer = this._differs.find(this._state).create();
-        return this._stateDiffer.diff(this._state);
+
+    private _stateChanges(changes) {
+        this.onStateChange(changes);
+        this.stateChange.emit(this.state);
     }
-    private _propsChanges() {
-        this._propsDiffer = this._differs.find(this._props).create();
-        return this._propsDiffer.diff(this._props);
+    private _propsChanges(changes) {
+        this.onPropsChange(changes);
+        this.propsChange.emit(this.props);
     }
-    abstract onPropsChange(changes: KeyValueChanges<string, any>): void;
-    abstract onStateChange(changes: KeyValueChanges<string, any>): void;
+    abstract onPropsChange(changes: KeyValueChanges<string, P>): void;
+    abstract onStateChange(changes: KeyValueChanges<string, T>): void;
 }
