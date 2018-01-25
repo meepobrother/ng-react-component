@@ -36,20 +36,22 @@ var ReactComponent = /** @class */ (function () {
         this._differs = _differs;
         this.stateChange = new core.EventEmitter();
         this.propsChange = new core.EventEmitter();
+        this._props = /** @type {?} */ ({});
+        this._state = /** @type {?} */ ({});
     }
     Object.defineProperty(ReactComponent.prototype, "state", {
         /**
          * @return {?}
          */
         get: function () {
-            return /** @type {?} */ (defaults(this.getInitialState(), this._state));
+            return this._state;
         },
         /**
          * @param {?} val
          * @return {?}
          */
         set: function (val) {
-            this._state = val;
+            this.setState(val);
         },
         enumerable: true,
         configurable: true
@@ -69,14 +71,14 @@ var ReactComponent = /** @class */ (function () {
          * @return {?}
          */
         get: function () {
-            return /** @type {?} */ (defaults(this.getDefaultProps(), this._props));
+            return this._props;
         },
         /**
          * @param {?} val
          * @return {?}
          */
         set: function (val) {
-            this._props = val;
+            this.setProps(val);
         },
         enumerable: true,
         configurable: true
@@ -97,11 +99,11 @@ var ReactComponent = /** @class */ (function () {
      */
     ReactComponent.prototype.setState = function (state) {
         this._stateChanges();
-        this.state = /** @type {?} */ (defaults(this.state, state));
-        var /** @type {?} */ diffter = this._stateDiffer.diff(this.state);
+        this._state = /** @type {?} */ (defaults(this._state, state));
+        var /** @type {?} */ diffter = this._stateDiffer.diff(this._state);
         if (diffter) {
             this.onStateChange(diffter);
-            this.stateChange.emit(this.state);
+            this.stateChange.emit(this._state);
         }
         return this.state$;
     };
@@ -111,11 +113,11 @@ var ReactComponent = /** @class */ (function () {
      */
     ReactComponent.prototype.setProps = function (props) {
         this._propsChanges();
-        this.props = /** @type {?} */ (defaults(this.props, props));
-        var /** @type {?} */ diffter = this._propsDiffer.diff(this.props);
+        this._props = /** @type {?} */ (defaults(this._props, props));
+        var /** @type {?} */ diffter = this._propsDiffer.diff(this._props);
         if (diffter) {
             this.onPropsChange(diffter);
-            this.propsChange.emit(this.props);
+            this.propsChange.emit(this._props);
         }
         return this.props$;
     };
@@ -123,15 +125,15 @@ var ReactComponent = /** @class */ (function () {
      * @return {?}
      */
     ReactComponent.prototype._stateChanges = function () {
-        this._stateDiffer = this._differs.find(this.state).create();
-        return this._stateDiffer.diff(this.state);
+        this._stateDiffer = this._differs.find(this._state).create();
+        return this._stateDiffer.diff(this._state);
     };
     /**
      * @return {?}
      */
     ReactComponent.prototype._propsChanges = function () {
-        this._propsDiffer = this._differs.find(this.props).create();
-        return this._propsDiffer.diff(this.props);
+        this._propsDiffer = this._differs.find(this._props).create();
+        return this._propsDiffer.diff(this._props);
     };
     return ReactComponent;
 }());
@@ -264,6 +266,53 @@ var RecordViewTuple = /** @class */ (function () {
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
+var NgComponentDirective = /** @class */ (function () {
+    /**
+     * @param {?} _viewContainerRef
+     */
+    function NgComponentDirective(_viewContainerRef) {
+        this.viewContainerRef = _viewContainerRef;
+    }
+    /**
+     * @return {?}
+     */
+    NgComponentDirective.prototype.ngOnInit = function () {
+        // console.log(this.ngComponentInput);
+    };
+    /**
+     * @param {?} changes
+     * @return {?}
+     */
+    NgComponentDirective.prototype.ngOnChanges = function (changes) {
+        this.viewContainerRef.clear();
+        this.componentRef = null;
+        if (this.ngComponent) {
+            var /** @type {?} */ elInjector = this.viewContainerRef.parentInjector;
+            var /** @type {?} */ componentFactoryResolver = this.moduleRef ? this.moduleRef.componentFactoryResolver :
+                elInjector.get(core.ComponentFactoryResolver);
+            var /** @type {?} */ componentFactory = componentFactoryResolver.resolveComponentFactory(this.ngComponent);
+            this.componentRef = this.viewContainerRef.createComponent(componentFactory, this.viewContainerRef.length, elInjector, this.ngComponent);
+            this.componentRef.instance.props = this.ngComponentInput;
+        }
+    };
+    return NgComponentDirective;
+}());
+NgComponentDirective.decorators = [
+    { type: core.Directive, args: [{ selector: '[ngComponent]' },] },
+];
+/** @nocollapse */
+NgComponentDirective.ctorParameters = function () { return [
+    { type: core.ViewContainerRef, },
+]; };
+NgComponentDirective.propDecorators = {
+    "ngComponent": [{ type: core.Input },],
+    "ngComponentInput": [{ type: core.Input },],
+    "Output": [{ type: core.Output },],
+};
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 var ReactCommonModule = /** @class */ (function () {
     function ReactCommonModule() {
     }
@@ -272,10 +321,12 @@ var ReactCommonModule = /** @class */ (function () {
 ReactCommonModule.decorators = [
     { type: core.NgModule, args: [{
                 exports: [
-                    NgEachOf
+                    NgEachOf,
+                    NgComponentDirective
                 ],
                 declarations: [
-                    NgEachOf
+                    NgEachOf,
+                    NgComponentDirective
                 ]
             },] },
 ];
@@ -284,6 +335,7 @@ ReactCommonModule.ctorParameters = function () { return []; };
 
 exports.ReactComponent = ReactComponent;
 exports.ReactCommonModule = ReactCommonModule;
+exports.ɵc = NgComponentDirective;
 exports.ɵb = NgEachOf;
 exports.ɵa = NgEachOfContext;
 

@@ -23,9 +23,19 @@
   dependencies:
     tslib "^1.7.1"
 
+"@angular/forms@^5.2.1":
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-5.2.1.tgz#530f1249bc71d9560297be642d55a5a6c439d920"
+  dependencies:
+    tslib "^1.7.1"
+
 "@ngtools/json-schema@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@ngtools/json-schema/-/json-schema-1.1.0.tgz#c3a0c544d62392acc2813a42c8a0dc6f58f86922"
+
+"@types/classnames@^2.2.3":
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/@types/classnames/-/classnames-2.2.3.tgz#3f0ff6873da793870e20a260cada55982f38a9e5"
 
 abbrev@1:
   version "1.1.1"
@@ -302,6 +312,10 @@ chokidar@^1.4.2, chokidar@^1.6.0:
     readdirp "^2.0.0"
   optionalDependencies:
     fsevents "^1.0.0"
+
+classnames@^2.2.5:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
 
 cliui@^3.2.0:
   version "3.2.0"
@@ -1099,6 +1113,10 @@ magic-string@^0.22.4:
 map-obj@^1.0.0, map-obj@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-1.0.1.tgz#d933ceb9205d82bdcf4886f6742bdc2b4dea146d"
+
+meepo-common@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/meepo-common/-/meepo-common-1.0.8.tgz#781156cc948b7ea420025f3adedd0431e425a95a"
 
 meow@^3.7.0:
   version "3.7.0"

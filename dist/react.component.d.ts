@@ -24,6 +24,4 @@ export declare abstract class ReactComponent<P extends KeyValue, T extends KeyVa
     private _propsChanges();
     abstract onPropsChange(changes: KeyValueChanges<string, any>): void;
     abstract onStateChange(changes: KeyValueChanges<string, any>): void;
-    abstract getDefaultProps(): P;
-    abstract getInitialState(): T;
 }
