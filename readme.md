@@ -27,10 +27,16 @@ export declare abstract class ReactComponent<P extends KeyValue, T extends KeyVa
     setProps(props: P): void;
     ngOnChanges(changes: SimpleChanges): void;
     ngDoCheck(): void;
+    setClass(classObj: {
+        [key: string]: boolean;
+    }): void;
+    setStyle(styleObj: {
+        [key: string]: string;
+    }): void;
+    removeStyle(styles: any): void;
+    addStyle(name: string, value: string): void;
     addClass(name: string): void;
     removeClass(name: string): void;
-    addStyle(name: string, value: string): void;
-    removeStyle(name: string): void;
     private _stateChanges(changes);
     private _propsChanges(changes);
     abstract onPropsChange(changes: KeyValueChanges<string, P>): void;
