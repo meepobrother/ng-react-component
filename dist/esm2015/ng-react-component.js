@@ -62,6 +62,7 @@ class ReactComponent {
         return this.propsChange.share();
     }
     /**
+     * 监听click事件
      * @param {?} e
      * @return {?}
      */
@@ -166,6 +167,25 @@ class ReactComponent {
      */
     addClass(name) {
         this.render.addClass(this.ele.nativeElement, name);
+    }
+    /**
+     * @param {?} classObj
+     * @return {?}
+     */
+    setAttribute(classObj) {
+        for (const /** @type {?} */ key in classObj) {
+            if (type(classObj[key]) === 'boolean') {
+                if (classObj[key]) {
+                    this.render.setAttribute(this.ele.nativeElement, key, 'true');
+                }
+                else {
+                    this.render.removeAttribute(this.ele.nativeElement, key);
+                }
+            }
+            else {
+                this.render.setAttribute(this.ele.nativeElement, key, classObj[key]);
+            }
+        }
     }
     /**
      * @param {?} name

@@ -16,7 +16,11 @@ export declare abstract class ReactComponent<P extends KeyValue, T extends KeyVa
     stateChange: EventEmitter<T>;
     propsChange: EventEmitter<P>;
     onClick: EventEmitter<any>;
-    _onClick(e: any): void;
+    /**
+     * 监听click事件
+     * @param e
+     */
+    _onClick(e: Event): void;
     private _stateDiffer;
     private _propsDiffer;
     constructor(_differs: KeyValueDiffers, ele: ElementRef, render: Renderer2);
@@ -33,6 +37,9 @@ export declare abstract class ReactComponent<P extends KeyValue, T extends KeyVa
     removeStyle(styles: any): void;
     addStyle(name: string, value: string): void;
     addClass(name: string): void;
+    setAttribute(classObj: {
+        [key: string]: any;
+    }): void;
     removeClass(name: string): void;
     private _stateChanges(changes);
     private _propsChanges(changes);

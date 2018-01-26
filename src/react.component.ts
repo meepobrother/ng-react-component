@@ -36,8 +36,12 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
     @Output() propsChange: EventEmitter<P> = new EventEmitter();
 
     @Output() onClick: EventEmitter<any> = new EventEmitter();
+    /**
+     * 监听click事件
+     * @param e 
+     */
     @HostListener('click', ['$event'])
-    _onClick(e: any) {
+    _onClick(e: Event) {
         this.onClick.emit(e);
     }
     private _stateDiffer: KeyValueDiffer<string, any>;
@@ -118,6 +122,20 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
 
     addClass(name: string) {
         this.render.addClass(this.ele.nativeElement, name);
+    }
+
+    setAttribute(classObj: { [key: string]: any }) {
+        for (const key in classObj) {
+            if (type(classObj[key]) === 'boolean') {
+                if (classObj[key]) {
+                    this.render.setAttribute(this.ele.nativeElement, key, 'true');
+                } else {
+                    this.render.removeAttribute(this.ele.nativeElement, key);
+                }
+            } else {
+                this.render.setAttribute(this.ele.nativeElement, key, classObj[key]);
+            }
+        }
     }
 
     removeClass(name: string) {
