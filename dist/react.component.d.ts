@@ -23,6 +23,7 @@ export declare abstract class ReactComponent<P extends KeyValue, T extends KeyVa
     _onClick(e: Event): void;
     private _stateDiffer;
     private _propsDiffer;
+    guid: string;
     constructor(_differs: KeyValueDiffers, ele: ElementRef, render: Renderer2);
     setState(state: T): void;
     setProps(props: P): void;

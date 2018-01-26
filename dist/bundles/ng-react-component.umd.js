@@ -1,8 +1,8 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('rxjs/add/operator/share')) :
-	typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'rxjs/add/operator/share'], factory) :
-	(factory((global['ng-react-component'] = {}),global.ng.core));
-}(this, (function (exports,core) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('rxjs/add/operator/share'), require('meepo-common')) :
+	typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'rxjs/add/operator/share', 'meepo-common'], factory) :
+	(factory((global['ng-react-component'] = {}),global.ng.core,global.Rx.Observable.prototype,global.meepoCommon));
+}(this, (function (exports,core,share,meepoCommon) { 'use strict';
 
 /**
  * @fileoverview added by tsickle
@@ -48,6 +48,7 @@ var ReactComponent = /** @class */ (function () {
         this.stateChange = new core.EventEmitter();
         this.propsChange = new core.EventEmitter();
         this.onClick = new core.EventEmitter();
+        this.guid = meepoCommon.guid();
         this.props = /** @type {?} */ ({});
         this.state = /** @type {?} */ ({});
     }

@@ -1,5 +1,6 @@
 import { ComponentFactoryResolver, Directive, EventEmitter, HostListener, Input, KeyValueDiffers, NgModule, Output, TemplateRef, ViewContainerRef } from '@angular/core';
 import 'rxjs/add/operator/share';
+import { guid } from 'meepo-common';
 /**
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
@@ -44,6 +45,7 @@ var ReactComponent = /** @class */ (function () {
         this.stateChange = new EventEmitter();
         this.propsChange = new EventEmitter();
         this.onClick = new EventEmitter();
+        this.guid = guid();
         this.props = /** @type {?} */ ({});
         this.state = /** @type {?} */ ({});
     }

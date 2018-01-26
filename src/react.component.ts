@@ -7,7 +7,7 @@ import {
 import { OnChanges, KeyValueChanges, DoCheck, KeyValueDiffers, SimpleChanges } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
-
+import { guid } from 'meepo-common';
 function type(val): string {
     return typeof val;
 }
@@ -46,7 +46,7 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
     }
     private _stateDiffer: KeyValueDiffer<string, any>;
     private _propsDiffer: KeyValueDiffer<string, any>;
-
+    guid: string = guid();
     constructor(
         private _differs: KeyValueDiffers,
         public ele: ElementRef,

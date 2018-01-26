@@ -1114,9 +1114,9 @@ map-obj@^1.0.0, map-obj@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-1.0.1.tgz#d933ceb9205d82bdcf4886f6742bdc2b4dea146d"
 
-meepo-common@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/meepo-common/-/meepo-common-1.0.8.tgz#781156cc948b7ea420025f3adedd0431e425a95a"
+meepo-common@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/meepo-common/-/meepo-common-1.1.6.tgz#55a5aef290731d4a9b39aba19443cd39bcd75a1f"
 
 meow@^3.7.0:
   version "3.7.0"
