@@ -46,7 +46,9 @@ var ReactComponent = /** @class */ (function () {
         this.propsChange = new EventEmitter();
         this.onClick = new EventEmitter();
         this.guid = guid();
-        this.props = /** @type {?} */ ({});
+        this.props = /** @type {?} */ ({
+            children: []
+        });
         this.state = /** @type {?} */ ({});
     }
     Object.defineProperty(ReactComponent.prototype, "state$", {

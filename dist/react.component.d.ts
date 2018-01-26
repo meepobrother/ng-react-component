@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
 export interface KeyValue {
     [key: string]: any;
+    children: any[];
 }
 export declare abstract class ReactComponent<P extends KeyValue, T extends KeyValue> implements OnChanges, DoCheck {
     private _differs;

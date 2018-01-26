@@ -49,7 +49,9 @@ var ReactComponent = /** @class */ (function () {
         this.propsChange = new core.EventEmitter();
         this.onClick = new core.EventEmitter();
         this.guid = meepoCommon.guid();
-        this.props = /** @type {?} */ ({});
+        this.props = /** @type {?} */ ({
+            children: []
+        });
         this.state = /** @type {?} */ ({});
     }
     Object.defineProperty(ReactComponent.prototype, "state$", {

@@ -22,6 +22,7 @@ function defaults(target: any, options: any): KeyValue {
 }
 export interface KeyValue {
     [key: string]: any;
+    children: any[];
 }
 export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> implements OnChanges, DoCheck {
     @Input() state: T;
@@ -52,7 +53,9 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
         public ele: ElementRef,
         public render: Renderer2
     ) {
-        this.props = {} as P;
+        this.props = {
+            children: []
+        } as P;
         this.state = {} as T;
     }
 
