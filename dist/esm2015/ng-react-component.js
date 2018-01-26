@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, Directive, EventEmitter, Input, KeyValueDiffers, NgModule, Output, TemplateRef, ViewContainerRef } from '@angular/core';
+import { ComponentFactoryResolver, Directive, EventEmitter, HostListener, Input, KeyValueDiffers, NgModule, Output, TemplateRef, ViewContainerRef } from '@angular/core';
 import 'rxjs/add/operator/share';
 
 /**
@@ -29,11 +29,16 @@ function defaults(target, options) {
 class ReactComponent {
     /**
      * @param {?} _differs
+     * @param {?} ele
+     * @param {?} render
      */
-    constructor(_differs) {
+    constructor(_differs, ele, render) {
         this._differs = _differs;
+        this.ele = ele;
+        this.render = render;
         this.stateChange = new EventEmitter();
         this.propsChange = new EventEmitter();
+        this.onClick = new EventEmitter();
         this.props = /** @type {?} */ ({});
         this.state = /** @type {?} */ ({});
     }
@@ -48,6 +53,13 @@ class ReactComponent {
      */
     get props$() {
         return this.propsChange.share();
+    }
+    /**
+     * @param {?} e
+     * @return {?}
+     */
+    _onClick(e) {
+        this.onClick.emit(e);
     }
     /**
      * @param {?} state
@@ -97,6 +109,35 @@ class ReactComponent {
         }
     }
     /**
+     * @param {?} name
+     * @return {?}
+     */
+    addClass(name) {
+        this.render.addClass(this.ele.nativeElement, name);
+    }
+    /**
+     * @param {?} name
+     * @return {?}
+     */
+    removeClass(name) {
+        this.render.removeClass(this.ele.nativeElement, name);
+    }
+    /**
+     * @param {?} name
+     * @param {?} value
+     * @return {?}
+     */
+    addStyle(name, value) {
+        this.render.setStyle(this.ele.nativeElement, name, value);
+    }
+    /**
+     * @param {?} name
+     * @return {?}
+     */
+    removeStyle(name) {
+        this.render.removeStyle(this.ele.nativeElement, name);
+    }
+    /**
      * @param {?} changes
      * @return {?}
      */
@@ -118,6 +159,8 @@ ReactComponent.propDecorators = {
     "props": [{ type: Input },],
     "stateChange": [{ type: Output },],
     "propsChange": [{ type: Output },],
+    "onClick": [{ type: Output },],
+    "_onClick": [{ type: HostListener, args: ['click', ['$event'],] },],
 };
 
 /**

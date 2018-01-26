@@ -1,5 +1,9 @@
 
-import { EventEmitter, NgZone, Input, Output, KeyValueDiffer } from '@angular/core';
+import {
+    EventEmitter, NgZone, Input, Output,
+    KeyValueDiffer, HostListener, HostBinding, ElementRef,
+    Renderer2
+} from '@angular/core';
 import { OnChanges, KeyValueChanges, DoCheck, KeyValueDiffers, SimpleChanges } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
@@ -27,10 +31,19 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
     }
     @Output() stateChange: EventEmitter<T> = new EventEmitter();
     @Output() propsChange: EventEmitter<P> = new EventEmitter();
+
+    @Output() onClick: EventEmitter<any> = new EventEmitter();
+    @HostListener('click', ['$event'])
+    _onClick(e: any) {
+        this.onClick.emit(e);
+    }
     private _stateDiffer: KeyValueDiffer<string, any>;
     private _propsDiffer: KeyValueDiffer<string, any>;
+
     constructor(
-        private _differs: KeyValueDiffers
+        private _differs: KeyValueDiffers,
+        public ele: ElementRef,
+        public render: Renderer2
     ) {
         this.props = {} as P;
         this.state = {} as T;
@@ -70,7 +83,23 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
         }
     }
 
-    private _stateChanges(changes) {
+    addClass(name: string) {
+        this.render.addClass(this.ele.nativeElement, name);
+    }
+
+    removeClass(name: string) {
+        this.render.removeClass(this.ele.nativeElement, name);
+    }
+
+    addStyle(name: string, value: string) {
+        this.render.setStyle(this.ele.nativeElement, name, value);
+    }
+
+    removeStyle(name: string) {
+        this.render.removeStyle(this.ele.nativeElement, name);
+    }
+
+    private _stateChanges(changes: KeyValueChanges<string, T>) {
         this.onStateChange(changes);
         this.stateChange.emit(this.state);
     }

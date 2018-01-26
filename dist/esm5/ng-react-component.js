@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, Directive, EventEmitter, Input, KeyValueDiffers, NgModule, Output, TemplateRef, ViewContainerRef } from '@angular/core';
+import { ComponentFactoryResolver, Directive, EventEmitter, HostListener, Input, KeyValueDiffers, NgModule, Output, TemplateRef, ViewContainerRef } from '@angular/core';
 import 'rxjs/add/operator/share';
 /**
  * @fileoverview added by tsickle
@@ -27,11 +27,16 @@ function defaults(target, options) {
 var ReactComponent = /** @class */ (function () {
     /**
      * @param {?} _differs
+     * @param {?} ele
+     * @param {?} render
      */
-    function ReactComponent(_differs) {
+    function ReactComponent(_differs, ele, render) {
         this._differs = _differs;
+        this.ele = ele;
+        this.render = render;
         this.stateChange = new EventEmitter();
         this.propsChange = new EventEmitter();
+        this.onClick = new EventEmitter();
         this.props = /** @type {?} */ ({});
         this.state = /** @type {?} */ ({});
     }
@@ -55,6 +60,13 @@ var ReactComponent = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    /**
+     * @param {?} e
+     * @return {?}
+     */
+    ReactComponent.prototype._onClick = function (e) {
+        this.onClick.emit(e);
+    };
     /**
      * @param {?} state
      * @return {?}
@@ -103,6 +115,35 @@ var ReactComponent = /** @class */ (function () {
         }
     };
     /**
+     * @param {?} name
+     * @return {?}
+     */
+    ReactComponent.prototype.addClass = function (name) {
+        this.render.addClass(this.ele.nativeElement, name);
+    };
+    /**
+     * @param {?} name
+     * @return {?}
+     */
+    ReactComponent.prototype.removeClass = function (name) {
+        this.render.removeClass(this.ele.nativeElement, name);
+    };
+    /**
+     * @param {?} name
+     * @param {?} value
+     * @return {?}
+     */
+    ReactComponent.prototype.addStyle = function (name, value) {
+        this.render.setStyle(this.ele.nativeElement, name, value);
+    };
+    /**
+     * @param {?} name
+     * @return {?}
+     */
+    ReactComponent.prototype.removeStyle = function (name) {
+        this.render.removeStyle(this.ele.nativeElement, name);
+    };
+    /**
      * @param {?} changes
      * @return {?}
      */
@@ -125,6 +166,8 @@ ReactComponent.propDecorators = {
     "props": [{ type: Input },],
     "stateChange": [{ type: Output },],
     "propsChange": [{ type: Output },],
+    "onClick": [{ type: Output },],
+    "_onClick": [{ type: HostListener, args: ['click', ['$event'],] },],
 };
 /**
  * @fileoverview added by tsickle

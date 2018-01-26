@@ -1,34 +1,40 @@
 # ReactComponent<P,T> 
 
 ```ts
-import { EventEmitter } from '@angular/core';
-import { KeyValueChanges, KeyValueDiffers } from '@angular/core';
+import { EventEmitter, ElementRef, Renderer2 } from '@angular/core';
+import { OnChanges, KeyValueChanges, DoCheck, KeyValueDiffers, SimpleChanges } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
 export interface KeyValue {
     [key: string]: any;
 }
-export declare abstract class ReactComponent<P extends KeyValue, T extends KeyValue> {
+export declare abstract class ReactComponent<P extends KeyValue, T extends KeyValue> implements OnChanges, DoCheck {
     private _differs;
-    private _state;
+    ele: ElementRef;
+    render: Renderer2;
     state: T;
     readonly state$: Observable<KeyValue>;
-    private _props;
     props: P;
     readonly props$: Observable<P>;
     stateChange: EventEmitter<T>;
     propsChange: EventEmitter<P>;
+    onClick: EventEmitter<any>;
+    _onClick(e: any): void;
     private _stateDiffer;
     private _propsDiffer;
-    constructor(_differs: KeyValueDiffers);
-    setState(state: T, key?: string): Observable<KeyValue>;
-    setProps(props: P, key?: string): Observable<P>;
-    private _stateChanges();
-    private _propsChanges();
-    abstract onPropsChange(changes: KeyValueChanges<string, any>): void;
-    abstract onStateChange(changes: KeyValueChanges<string, any>): void;
-    abstract getDefaultProps(): P;
-    abstract getInitialState(): T;
+    constructor(_differs: KeyValueDiffers, ele: ElementRef, render: Renderer2);
+    setState(state: T): void;
+    setProps(props: P): void;
+    ngOnChanges(changes: SimpleChanges): void;
+    ngDoCheck(): void;
+    addClass(name: string): void;
+    removeClass(name: string): void;
+    addStyle(name: string, value: string): void;
+    removeStyle(name: string): void;
+    private _stateChanges(changes);
+    private _propsChanges(changes);
+    abstract onPropsChange(changes: KeyValueChanges<string, P>): void;
+    abstract onStateChange(changes: KeyValueChanges<string, T>): void;
 }
 ```
 
