@@ -9,6 +9,13 @@
  * @suppress {checkTypes} checked by tsc
  */
 /**
+ * @param {?} val
+ * @return {?}
+ */
+function type(val) {
+    return typeof val;
+}
+/**
  * @param {?} target
  * @param {?} options
  * @return {?}
@@ -119,18 +126,42 @@ var ReactComponent = /** @class */ (function () {
         }
     };
     /**
-     * @param {?} name
+     * @param {?} classObj
      * @return {?}
      */
-    ReactComponent.prototype.addClass = function (name) {
-        this.render.addClass(this.ele.nativeElement, name);
+    ReactComponent.prototype.setClass = function (classObj) {
+        for (var /** @type {?} */ key in classObj) {
+            if (classObj[key]) {
+                this.render.addClass(this.ele.nativeElement, key);
+            }
+            else {
+                this.render.removeClass(this.ele.nativeElement, key);
+            }
+        }
     };
     /**
-     * @param {?} name
+     * @param {?} styleObj
      * @return {?}
      */
-    ReactComponent.prototype.removeClass = function (name) {
-        this.render.removeClass(this.ele.nativeElement, name);
+    ReactComponent.prototype.setStyle = function (styleObj) {
+        for (var /** @type {?} */ key in styleObj) {
+            this.render.setStyle(this.ele.nativeElement, key, styleObj[key]);
+        }
+    };
+    /**
+     * @param {?} styles
+     * @return {?}
+     */
+    ReactComponent.prototype.removeStyle = function (styles) {
+        var _this = this;
+        if (type(styles) == 'array') {
+            styles.map(function (key) {
+                _this.render.removeStyle(_this.ele.nativeElement, key);
+            });
+        }
+        else {
+            this.render.removeStyle(this.ele.nativeElement, styles);
+        }
     };
     /**
      * @param {?} name
@@ -144,8 +175,15 @@ var ReactComponent = /** @class */ (function () {
      * @param {?} name
      * @return {?}
      */
-    ReactComponent.prototype.removeStyle = function (name) {
-        this.render.removeStyle(this.ele.nativeElement, name);
+    ReactComponent.prototype.addClass = function (name) {
+        this.render.addClass(this.ele.nativeElement, name);
+    };
+    /**
+     * @param {?} name
+     * @return {?}
+     */
+    ReactComponent.prototype.removeClass = function (name) {
+        this.render.removeClass(this.ele.nativeElement, name);
     };
     /**
      * @param {?} changes

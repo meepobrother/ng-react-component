@@ -6,6 +6,13 @@ import 'rxjs/add/operator/share';
  * @suppress {checkTypes} checked by tsc
  */
 /**
+ * @param {?} val
+ * @return {?}
+ */
+function type(val) {
+    return typeof val;
+}
+/**
  * @param {?} target
  * @param {?} options
  * @return {?}
@@ -109,18 +116,41 @@ class ReactComponent {
         }
     }
     /**
-     * @param {?} name
+     * @param {?} classObj
      * @return {?}
      */
-    addClass(name) {
-        this.render.addClass(this.ele.nativeElement, name);
+    setClass(classObj) {
+        for (const /** @type {?} */ key in classObj) {
+            if (classObj[key]) {
+                this.render.addClass(this.ele.nativeElement, key);
+            }
+            else {
+                this.render.removeClass(this.ele.nativeElement, key);
+            }
+        }
     }
     /**
-     * @param {?} name
+     * @param {?} styleObj
      * @return {?}
      */
-    removeClass(name) {
-        this.render.removeClass(this.ele.nativeElement, name);
+    setStyle(styleObj) {
+        for (const /** @type {?} */ key in styleObj) {
+            this.render.setStyle(this.ele.nativeElement, key, styleObj[key]);
+        }
+    }
+    /**
+     * @param {?} styles
+     * @return {?}
+     */
+    removeStyle(styles) {
+        if (type(styles) == 'array') {
+            styles.map(key => {
+                this.render.removeStyle(this.ele.nativeElement, key);
+            });
+        }
+        else {
+            this.render.removeStyle(this.ele.nativeElement, styles);
+        }
     }
     /**
      * @param {?} name
@@ -134,8 +164,15 @@ class ReactComponent {
      * @param {?} name
      * @return {?}
      */
-    removeStyle(name) {
-        this.render.removeStyle(this.ele.nativeElement, name);
+    addClass(name) {
+        this.render.addClass(this.ele.nativeElement, name);
+    }
+    /**
+     * @param {?} name
+     * @return {?}
+     */
+    removeClass(name) {
+        this.render.removeClass(this.ele.nativeElement, name);
     }
     /**
      * @param {?} changes

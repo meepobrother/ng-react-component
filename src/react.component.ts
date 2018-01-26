@@ -8,6 +8,9 @@ import { OnChanges, KeyValueChanges, DoCheck, KeyValueDiffers, SimpleChanges } f
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
 
+function type(val): string {
+    return typeof val;
+}
 function defaults(target: any, options: any): KeyValue {
     if (target === null || (typeof target !== 'object' && typeof target !== 'function')) {
         target = {};
@@ -83,20 +86,42 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
         }
     }
 
-    addClass(name: string) {
-        this.render.addClass(this.ele.nativeElement, name);
+    setClass(classObj: { [key: string]: boolean }) {
+        for (const key in classObj) {
+            if (classObj[key]) {
+                this.render.addClass(this.ele.nativeElement, key);
+            } else {
+                this.render.removeClass(this.ele.nativeElement, key);
+            }
+        }
     }
 
-    removeClass(name: string) {
-        this.render.removeClass(this.ele.nativeElement, name);
+    setStyle(styleObj: { [key: string]: string }) {
+        for (const key in styleObj) {
+            this.render.setStyle(this.ele.nativeElement, key, styleObj[key]);
+        }
+    }
+
+    removeStyle(styles: any) {
+        if (type(styles) == 'array') {
+            styles.map(key => {
+                this.render.removeStyle(this.ele.nativeElement, key);
+            });
+        } else {
+            this.render.removeStyle(this.ele.nativeElement, styles);
+        }
     }
 
     addStyle(name: string, value: string) {
         this.render.setStyle(this.ele.nativeElement, name, value);
     }
 
-    removeStyle(name: string) {
-        this.render.removeStyle(this.ele.nativeElement, name);
+    addClass(name: string) {
+        this.render.addClass(this.ele.nativeElement, name);
+    }
+
+    removeClass(name: string) {
+        this.render.removeClass(this.ele.nativeElement, name);
     }
 
     private _stateChanges(changes: KeyValueChanges<string, T>) {
