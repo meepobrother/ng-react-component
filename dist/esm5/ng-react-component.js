@@ -1,30 +1,27 @@
 import { ComponentFactoryResolver, Directive, EventEmitter, HostListener, Input, KeyValueDiffers, NgModule, Output, TemplateRef, ViewContainerRef } from '@angular/core';
 import 'rxjs/add/operator/share';
-import { guid } from 'meepo-common';
 /**
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
+/**
+ * @return {?}
+ */
+function guid() {
+    /**
+     * @return {?}
+     */
+    function S4() {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    }
+    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+}
 /**
  * @param {?} val
  * @return {?}
  */
 function type(val) {
     return typeof val;
-}
-/**
- * @param {?} target
- * @param {?} options
- * @return {?}
- */
-function defaults(target, options) {
-    if (target === null || (typeof target !== 'object' && typeof target !== 'function')) {
-        target = {};
-    }
-    if (options) {
-        target = Object.assign({}, target, options);
-    }
-    return target;
 }
 /**
  * @record
@@ -85,7 +82,7 @@ var ReactComponent = /** @class */ (function () {
      */
     ReactComponent.prototype.setState = function (state) {
         this._stateDiffer = this._differs.find(this.state).create();
-        this.state = /** @type {?} */ (defaults(this.state, state));
+        this.state = state;
         this.ngDoCheck();
     };
     /**
@@ -94,7 +91,7 @@ var ReactComponent = /** @class */ (function () {
      */
     ReactComponent.prototype.setProps = function (props) {
         this._propsDiffer = this._differs.find(this.props).create();
-        this.props = /** @type {?} */ (defaults(this.props, props));
+        this.props = props;
         this.ngDoCheck();
     };
     /**
@@ -155,7 +152,7 @@ var ReactComponent = /** @class */ (function () {
      */
     ReactComponent.prototype.removeStyle = function (styles) {
         var _this = this;
-        if (type(styles) == 'array') {
+        if (type(styles) == 'array' && type(styles) !== 'undefined') {
             styles.map(function (key) {
                 _this.render.removeStyle(_this.ele.nativeElement, key);
             });
