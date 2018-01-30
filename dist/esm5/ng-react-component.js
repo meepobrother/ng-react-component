@@ -54,6 +54,9 @@ function type(val) {
  * @record
  */
 /**
+ * @record
+ */
+/**
  * @abstract
  */
 var ReactComponent = /** @class */ (function () {

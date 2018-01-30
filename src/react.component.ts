@@ -26,10 +26,19 @@ function defaults(target: any, options: any): KeyValue {
     }
     return target;
 }
-export interface KeyValue {
+
+export interface ReactBase {
+    canDrag: boolean;
+    canDrop: boolean;
+    canMove: boolean;
+    canScale: boolean;
+}
+
+export interface KeyValue extends ReactBase {
     [key: string]: any;
     children: any[];
 }
+
 export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> implements OnChanges, DoCheck {
     @Input() state: T;
     get state$(): Observable<KeyValue> {

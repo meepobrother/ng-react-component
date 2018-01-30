@@ -2,7 +2,13 @@ import { EventEmitter, ElementRef, Renderer2 } from '@angular/core';
 import { OnChanges, KeyValueChanges, DoCheck, KeyValueDiffers, SimpleChanges } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
-export interface KeyValue {
+export interface ReactBase {
+    canDrag: boolean;
+    canDrop: boolean;
+    canMove: boolean;
+    canScale: boolean;
+}
+export interface KeyValue extends ReactBase {
     [key: string]: any;
     children: any[];
 }

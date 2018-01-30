@@ -30,6 +30,10 @@ function type(val) {
  */
 
 /**
+ * @record
+ */
+
+/**
  * @abstract
  */
 class ReactComponent {
