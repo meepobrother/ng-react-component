@@ -49,6 +49,7 @@ class ReactComponent {
         this.stateChange = new EventEmitter();
         this.propsChange = new EventEmitter();
         this.onClick = new EventEmitter();
+        this.onHover = new EventEmitter();
         this.props = /** @type {?} */ ({
             children: []
         });
@@ -65,6 +66,18 @@ class ReactComponent {
      */
     get props$() {
         return this.propsChange.share();
+    }
+    /**
+     * @return {?}
+     */
+    mouseover() {
+        this.props.focus = true;
+    }
+    /**
+     * @return {?}
+     */
+    mouseleave() {
+        this.props.focus = false;
     }
     /**
      * 监听click事件
@@ -304,6 +317,9 @@ ReactComponent.propDecorators = {
     "stateChange": [{ type: Output },],
     "propsChange": [{ type: Output },],
     "onClick": [{ type: Output },],
+    "onHover": [{ type: Output },],
+    "mouseover": [{ type: HostListener, args: ['mouseenter', ['$event'],] },],
+    "mouseleave": [{ type: HostListener, args: ['mouseleave', ['$event'],] },],
     "_onClick": [{ type: HostListener, args: ['click', ['$event'],] },],
     "_id": [{ type: HostBinding, args: ['attr.id',] },],
 };

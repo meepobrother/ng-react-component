@@ -63,10 +63,12 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
     @HostListener('mouseenter', ['$event'])
     mouseover() {
         this.props.focus = true;
+        this.onHover.emit(this.props.focus);
     }
     @HostListener('mouseleave', ['$event'])
     mouseleave() {
         this.props.focus = false;
+        this.onHover.emit(this.props.focus);
     }
     /**
      * 监听click事件

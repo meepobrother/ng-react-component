@@ -7,6 +7,7 @@ export interface ReactBase {
     canDrop: boolean;
     canMove: boolean;
     canScale: boolean;
+    focus: boolean;
 }
 export interface KeyValue extends ReactBase {
     [key: string]: any;
@@ -23,6 +24,9 @@ export declare abstract class ReactComponent<P extends KeyValue, T extends KeyVa
     stateChange: EventEmitter<T>;
     propsChange: EventEmitter<P>;
     onClick: EventEmitter<any>;
+    onHover: EventEmitter<any>;
+    mouseover(): void;
+    mouseleave(): void;
     /**
      * 监听click事件
      * @param e

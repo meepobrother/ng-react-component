@@ -72,6 +72,7 @@ var ReactComponent = /** @class */ (function () {
         this.stateChange = new EventEmitter();
         this.propsChange = new EventEmitter();
         this.onClick = new EventEmitter();
+        this.onHover = new EventEmitter();
         this.props = /** @type {?} */ ({
             children: []
         });
@@ -97,6 +98,18 @@ var ReactComponent = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    /**
+     * @return {?}
+     */
+    ReactComponent.prototype.mouseover = function () {
+        this.props.focus = true;
+    };
+    /**
+     * @return {?}
+     */
+    ReactComponent.prototype.mouseleave = function () {
+        this.props.focus = false;
+    };
     /**
      * 监听click事件
      * @param {?} e
@@ -341,6 +354,9 @@ ReactComponent.propDecorators = {
     "stateChange": [{ type: Output },],
     "propsChange": [{ type: Output },],
     "onClick": [{ type: Output },],
+    "onHover": [{ type: Output },],
+    "mouseover": [{ type: HostListener, args: ['mouseenter', ['$event'],] },],
+    "mouseleave": [{ type: HostListener, args: ['mouseleave', ['$event'],] },],
     "_onClick": [{ type: HostListener, args: ['click', ['$event'],] },],
     "_id": [{ type: HostBinding, args: ['attr.id',] },],
 };
