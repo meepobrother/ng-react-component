@@ -3,12 +3,12 @@ import { OnChanges, KeyValueChanges, DoCheck, KeyValueDiffers, SimpleChanges } f
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
 export interface ReactBase {
-    canDrag: boolean;
-    canDrop: boolean;
-    canMove: boolean;
-    canScale: boolean;
-    focus: boolean;
-    canSetting: boolean;
+    canDrag?: boolean;
+    canDrop?: boolean;
+    canMove?: boolean;
+    canScale?: boolean;
+    focus?: boolean;
+    canSetting?: boolean;
 }
 export interface KeyValue extends ReactBase {
     [key: string]: any;

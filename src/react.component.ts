@@ -29,17 +29,17 @@ function defaults(target: any, options: any): KeyValue {
 
 export interface ReactBase {
     // 可拖拽
-    canDrag: boolean;
+    canDrag?: boolean;
     // 可放置
-    canDrop: boolean;
+    canDrop?: boolean;
     // 可移动
-    canMove: boolean;
+    canMove?: boolean;
     // 可缩放
-    canScale: boolean;
+    canScale?: boolean;
     // focus
-    focus: boolean;
+    focus?: boolean;
     // 可配置
-    canSetting: boolean;
+    canSetting?: boolean;
 }
 
 export interface KeyValue extends ReactBase {
