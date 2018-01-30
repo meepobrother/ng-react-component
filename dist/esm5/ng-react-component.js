@@ -598,6 +598,30 @@ ReactCommonModule.ctorParameters = function () { return []; };
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
+var CreateLib = /** @class */ (function () {
+    /**
+     * @param {?} name
+     * @param {?} title
+     * @param {?=} props
+     * @param {?=} children
+     * @param {?=} state
+     */
+    function CreateLib(name, title, props, children, state) {
+        if (props === void 0) { props = {}; }
+        if (children === void 0) { children = []; }
+        if (state === void 0) { state = {}; }
+        this.name = name;
+        this.title = title;
+        this.props = props;
+        this.children = children;
+        this.state = state;
+    }
+    return CreateLib;
+}());
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 /**
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
@@ -605,5 +629,5 @@ ReactCommonModule.ctorParameters = function () { return []; };
 /**
  * Generated bundle index. Do not edit.
  */
-export { ReactComponent, ReactComponentSetting, ReactCommonModule, NgComponentDirective as ɵc, NgEachOf as ɵb, NgEachOfContext as ɵa };
+export { ReactComponent, ReactComponentSetting, ReactCommonModule, CreateLib, NgComponentDirective as ɵc, NgEachOf as ɵb, NgEachOfContext as ɵa };
 //# sourceMappingURL=ng-react-component.js.map

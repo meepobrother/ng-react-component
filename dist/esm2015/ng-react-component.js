@@ -551,6 +551,27 @@ ReactCommonModule.ctorParameters = () => [];
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
+class CreateLib {
+    /**
+     * @param {?} name
+     * @param {?} title
+     * @param {?=} props
+     * @param {?=} children
+     * @param {?=} state
+     */
+    constructor(name, title, props = {}, children = [], state = {}) {
+        this.name = name;
+        this.title = title;
+        this.props = props;
+        this.children = children;
+        this.state = state;
+    }
+}
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 
 /**
  * @fileoverview added by tsickle
@@ -560,5 +581,5 @@ ReactCommonModule.ctorParameters = () => [];
  * Generated bundle index. Do not edit.
  */
 
-export { ReactComponent, ReactComponentSetting, ReactCommonModule, NgComponentDirective as ɵc, NgEachOf as ɵb, NgEachOfContext as ɵa };
+export { ReactComponent, ReactComponentSetting, ReactCommonModule, CreateLib, NgComponentDirective as ɵc, NgEachOf as ɵb, NgEachOfContext as ɵa };
 //# sourceMappingURL=ng-react-component.js.map

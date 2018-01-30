@@ -2,7 +2,11 @@ import { EventEmitter, ElementRef, Renderer2 } from '@angular/core';
 import { OnChanges, KeyValueChanges, DoCheck, KeyValueDiffers, SimpleChanges } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
-export interface ReactBase {
+export interface KeyValue {
+    [key: string]: any;
+    children: any[];
+}
+export interface ReactBase extends KeyValue {
     canDrag?: boolean;
     canDrop?: boolean;
     canMove?: boolean;
@@ -10,11 +14,7 @@ export interface ReactBase {
     focus?: boolean;
     canSetting?: boolean;
 }
-export interface KeyValue extends ReactBase {
-    [key: string]: any;
-    children: any[];
-}
-export declare abstract class ReactComponent<P extends KeyValue, T extends KeyValue> implements OnChanges, DoCheck {
+export declare abstract class ReactComponent<P extends ReactBase, T extends KeyValue> implements OnChanges, DoCheck {
     private _differs;
     ele: ElementRef;
     render: Renderer2;

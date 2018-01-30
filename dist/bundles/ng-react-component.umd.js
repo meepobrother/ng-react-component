@@ -597,10 +597,35 @@ ReactCommonModule.decorators = [
 ];
 /** @nocollapse */
 ReactCommonModule.ctorParameters = function () { return []; };
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+var CreateLib = /** @class */ (function () {
+    /**
+     * @param {?} name
+     * @param {?} title
+     * @param {?=} props
+     * @param {?=} children
+     * @param {?=} state
+     */
+    function CreateLib(name, title, props, children, state) {
+        if (props === void 0) { props = {}; }
+        if (children === void 0) { children = []; }
+        if (state === void 0) { state = {}; }
+        this.name = name;
+        this.title = title;
+        this.props = props;
+        this.children = children;
+        this.state = state;
+    }
+    return CreateLib;
+}());
 
 exports.ReactComponent = ReactComponent;
 exports.ReactComponentSetting = ReactComponentSetting;
 exports.ReactCommonModule = ReactCommonModule;
+exports.CreateLib = CreateLib;
 exports.ɵc = NgComponentDirective;
 exports.ɵb = NgEachOf;
 exports.ɵa = NgEachOfContext;
