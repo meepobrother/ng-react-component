@@ -28,9 +28,13 @@ function defaults(target: any, options: any): KeyValue {
 }
 
 export interface ReactBase {
+    // 可拖拽
     canDrag: boolean;
+    // 可放置
     canDrop: boolean;
+    // 可移动
     canMove: boolean;
+    // 可缩放
     canScale: boolean;
 }
 
