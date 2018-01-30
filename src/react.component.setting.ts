@@ -19,7 +19,7 @@ export abstract class ReactComponentSetting<P extends KeyValue, T extends KeyVal
         }
         this.form.valueChanges.subscribe(res => {
             this.props.style = res;
-            this.onStateChange(res);
+            this.onStyleChange(res);
         });
     }
 
