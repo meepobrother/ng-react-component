@@ -40,7 +40,7 @@ export declare abstract class ReactComponent<P extends KeyValue, T extends KeyVa
     setStyle(styleObj: {
         [key: string]: string;
     }, ele?: HTMLElement): string;
-    removeStyle(styles: any, ele?: HTMLElement): void;
+    removeStyle(styles: any, ele?: HTMLElement): string;
     hyphenToHump(str: string): string;
     humpToHyphen(str: string): string;
     addStyle(name: string, value: string, ele?: HTMLElement): string;

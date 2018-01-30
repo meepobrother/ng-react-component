@@ -149,7 +149,7 @@ class ReactComponent {
      */
     setClass(classObj, ele) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         for (const /** @type {?} */ key in classObj) {
@@ -168,7 +168,7 @@ class ReactComponent {
      */
     setStyle(styleObj, ele) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         for (const /** @type {?} */ key in styleObj) {
@@ -187,6 +187,9 @@ class ReactComponent {
      */
     removeStyle(styles, ele) {
         ele = ele || this.getNative();
+        if (!ele) {
+            return '';
+        }
         if (type(styles) == 'array' && type(styles) !== 'undefined') {
             styles.map(key => {
                 this.render.removeStyle(ele, key);
@@ -221,7 +224,7 @@ class ReactComponent {
      */
     addStyle(name, value, ele) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         this.render.setStyle(ele, name, value);
@@ -233,7 +236,7 @@ class ReactComponent {
      */
     addClass(name, ele) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         this.render.addClass(this.ele.nativeElement, name);
@@ -245,7 +248,7 @@ class ReactComponent {
      */
     setAttribute(classObj, ele) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         for (const /** @type {?} */ key in classObj) {
@@ -269,7 +272,7 @@ class ReactComponent {
      */
     removeClass(name, ele) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         this.render.removeClass(ele, name);

@@ -117,7 +117,7 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
 
     setClass(classObj: { [key: string]: boolean }, ele?: HTMLElement) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         for (const key in classObj) {
@@ -131,7 +131,7 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
 
     setStyle(styleObj: { [key: string]: string }, ele?: HTMLElement) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         for (const key in styleObj) {
@@ -146,6 +146,9 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
 
     removeStyle(styles: any, ele?: HTMLElement) {
         ele = ele || this.getNative();
+        if (!ele) {
+            return '';
+        }
         if (type(styles) == 'array' && type(styles) !== 'undefined') {
             styles.map(key => {
                 this.render.removeStyle(ele, key);
@@ -168,7 +171,7 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
 
     addStyle(name: string, value: string, ele?: HTMLElement) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         this.render.setStyle(ele, name, value);
@@ -176,7 +179,7 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
 
     addClass(name: string, ele?: HTMLElement) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         this.render.addClass(this.ele.nativeElement, name);
@@ -184,7 +187,7 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
 
     setAttribute(classObj: { [key: string]: any }, ele?: HTMLElement) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         for (const key in classObj) {
@@ -202,7 +205,7 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
 
     removeClass(name: string, ele?: HTMLElement) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         this.render.removeClass(ele, name);

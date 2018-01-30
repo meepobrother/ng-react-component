@@ -185,7 +185,7 @@ var ReactComponent = /** @class */ (function () {
      */
     ReactComponent.prototype.setClass = function (classObj, ele) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         for (var /** @type {?} */ key in classObj) {
@@ -204,7 +204,7 @@ var ReactComponent = /** @class */ (function () {
      */
     ReactComponent.prototype.setStyle = function (styleObj, ele) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         for (var /** @type {?} */ key in styleObj) {
@@ -224,6 +224,9 @@ var ReactComponent = /** @class */ (function () {
     ReactComponent.prototype.removeStyle = function (styles, ele) {
         var _this = this;
         ele = ele || this.getNative();
+        if (!ele) {
+            return '';
+        }
         if (type(styles) == 'array' && type(styles) !== 'undefined') {
             styles.map(function (key) {
                 _this.render.removeStyle(ele, key);
@@ -258,7 +261,7 @@ var ReactComponent = /** @class */ (function () {
      */
     ReactComponent.prototype.addStyle = function (name, value, ele) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         this.render.setStyle(ele, name, value);
@@ -270,7 +273,7 @@ var ReactComponent = /** @class */ (function () {
      */
     ReactComponent.prototype.addClass = function (name, ele) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         this.render.addClass(this.ele.nativeElement, name);
@@ -282,7 +285,7 @@ var ReactComponent = /** @class */ (function () {
      */
     ReactComponent.prototype.setAttribute = function (classObj, ele) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         for (var /** @type {?} */ key in classObj) {
@@ -306,7 +309,7 @@ var ReactComponent = /** @class */ (function () {
      */
     ReactComponent.prototype.removeClass = function (name, ele) {
         ele = ele || this.getNative();
-        if (ele) {
+        if (!ele) {
             return '';
         }
         this.render.removeClass(ele, name);
