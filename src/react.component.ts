@@ -27,7 +27,12 @@ function defaults(target: any, options: any): KeyValue {
     return target;
 }
 
-export interface ReactBase {
+export interface KeyValue {
+    [key: string]: any;
+    children: any[];
+}
+
+export interface ReactBase extends KeyValue {
     // 可拖拽
     canDrag?: boolean;
     // 可放置
@@ -42,12 +47,7 @@ export interface ReactBase {
     canSetting?: boolean;
 }
 
-export interface KeyValue extends ReactBase {
-    [key: string]: any;
-    children: any[];
-}
-
-export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> implements OnChanges, DoCheck {
+export abstract class ReactComponent<P extends ReactBase, T extends KeyValue> implements OnChanges, DoCheck {
     @Input() state: T;
     get state$(): Observable<KeyValue> {
         return this.stateChange.share();

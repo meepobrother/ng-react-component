@@ -1,8 +1,12 @@
 import { ReactComponent, KeyValue } from './react.component';
 import { KeyValueDiffers, ElementRef, Renderer2 } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-// 设置
-export abstract class ReactComponentSetting<P extends KeyValue, T extends KeyValue> extends ReactComponent<P, T> {
+// 表单
+export interface ReactFormProps extends KeyValue {
+    form: FormBuilder;
+    url: string;
+}
+export abstract class ReactComponentForm<P extends ReactFormProps, T extends KeyValue> extends ReactComponent<P, T> {
     form: FormGroup;
     constructor(
         differs: KeyValueDiffers,
@@ -15,16 +19,16 @@ export abstract class ReactComponentSetting<P extends KeyValue, T extends KeyVal
     }
 
     initStyleForm() {
-        for (const key in this.props.style) {
-            this.form.addControl(key, new FormControl(this.props.style[key]));
+        for (const key in this.props.form) {
+            this.form.addControl(key, new FormControl(this.props.form[key]));
         }
         this.form.valueChanges.subscribe(res => {
-            this.props.style = res;
-            this.onStyleChange(res);
+            this.props.form = res;
+            this.onValueChange(res);
         });
     }
 
-    onStyleChange(res) {
-        this.setStyle(res, this.instance.ele.nativeElement);
+    onValueChange(res) {
+        console.log(res);
     }
 }
