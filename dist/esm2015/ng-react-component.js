@@ -72,12 +72,14 @@ class ReactComponent {
      */
     mouseover() {
         this.props.focus = true;
+        this.onHover.emit(this.props.focus);
     }
     /**
      * @return {?}
      */
     mouseleave() {
         this.props.focus = false;
+        this.onHover.emit(this.props.focus);
     }
     /**
      * 监听click事件

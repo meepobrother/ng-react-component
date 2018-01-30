@@ -38,6 +38,8 @@ export interface ReactBase {
     canScale: boolean;
     // focus
     focus: boolean;
+    // 可配置
+    canSetting: boolean;
 }
 
 export interface KeyValue extends ReactBase {

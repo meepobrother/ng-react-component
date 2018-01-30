@@ -106,12 +106,14 @@ var ReactComponent = /** @class */ (function () {
      */
     ReactComponent.prototype.mouseover = function () {
         this.props.focus = true;
+        this.onHover.emit(this.props.focus);
     };
     /**
      * @return {?}
      */
     ReactComponent.prototype.mouseleave = function () {
         this.props.focus = false;
+        this.onHover.emit(this.props.focus);
     };
     /**
      * 监听click事件

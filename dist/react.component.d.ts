@@ -8,6 +8,7 @@ export interface ReactBase {
     canMove: boolean;
     canScale: boolean;
     focus: boolean;
+    canSetting: boolean;
 }
 export interface KeyValue extends ReactBase {
     [key: string]: any;
