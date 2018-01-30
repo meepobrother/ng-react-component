@@ -354,7 +354,7 @@ class ReactComponentSetting extends ReactComponent {
         }
         this.form.valueChanges.subscribe(res => {
             this.props["style"] = res;
-            this.onStateChange(res);
+            this.onStyleChange(res);
         });
     }
     /**

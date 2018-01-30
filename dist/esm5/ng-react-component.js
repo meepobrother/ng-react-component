@@ -393,7 +393,7 @@ var ReactComponentSetting = /** @class */ (function (_super) {
         }
         this.form.valueChanges.subscribe(function (res) {
             _this.props["style"] = res;
-            _this.onStateChange(res);
+            _this.onStyleChange(res);
         });
     };
     /**
