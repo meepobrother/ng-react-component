@@ -36,6 +36,8 @@ export interface ReactBase {
     canMove: boolean;
     // 可缩放
     canScale: boolean;
+    // focus
+    focus: boolean;
 }
 
 export interface KeyValue extends ReactBase {
@@ -56,6 +58,16 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
     @Output() propsChange: EventEmitter<P> = new EventEmitter();
 
     @Output() onClick: EventEmitter<any> = new EventEmitter();
+    @Output() onHover: EventEmitter<any> = new EventEmitter();
+
+    @HostListener('mouseenter', ['$event'])
+    mouseover() {
+        this.props.focus = true;
+    }
+    @HostListener('mouseleave', ['$event'])
+    mouseleave() {
+        this.props.focus = false;
+    }
     /**
      * 监听click事件
      * @param e 
