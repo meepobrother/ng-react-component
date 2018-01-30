@@ -1,5 +1,6 @@
-import { ComponentFactoryResolver, Directive, EventEmitter, HostListener, Input, KeyValueDiffers, NgModule, Output, TemplateRef, ViewContainerRef } from '@angular/core';
+import { ComponentFactoryResolver, Directive, EventEmitter, HostBinding, HostListener, Input, KeyValueDiffers, NgModule, Output, TemplateRef, ViewContainerRef } from '@angular/core';
 import 'rxjs/add/operator/share';
+import { FormControl } from '@angular/forms';
 
 /**
  * @fileoverview added by tsickle
@@ -44,7 +45,6 @@ class ReactComponent {
         this.stateChange = new EventEmitter();
         this.propsChange = new EventEmitter();
         this.onClick = new EventEmitter();
-        this.guid = guid();
         this.props = /** @type {?} */ ({
             children: []
         });
@@ -69,6 +69,31 @@ class ReactComponent {
      */
     _onClick(e) {
         this.onClick.emit(e);
+    }
+    /**
+     * @param {?} val
+     * @return {?}
+     */
+    set guid(val) {
+        this._id = val;
+    }
+    /**
+     * @return {?}
+     */
+    get guid() {
+        return this._id;
+    }
+    /**
+     * @return {?}
+     */
+    createGuid() {
+        return guid();
+    }
+    /**
+     * @return {?}
+     */
+    getNative() {
+        return this.ele.nativeElement;
     }
     /**
      * @param {?} state
@@ -119,81 +144,135 @@ class ReactComponent {
     }
     /**
      * @param {?} classObj
+     * @param {?=} ele
      * @return {?}
      */
-    setClass(classObj) {
+    setClass(classObj, ele) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
         for (const /** @type {?} */ key in classObj) {
             if (classObj[key]) {
-                this.render.addClass(this.ele.nativeElement, key);
+                this.render.addClass(ele, key);
             }
             else {
-                this.render.removeClass(this.ele.nativeElement, key);
+                this.render.removeClass(ele, key);
             }
         }
     }
     /**
      * @param {?} styleObj
+     * @param {?=} ele
      * @return {?}
      */
-    setStyle(styleObj) {
+    setStyle(styleObj, ele) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
         for (const /** @type {?} */ key in styleObj) {
-            this.render.setStyle(this.ele.nativeElement, key, styleObj[key]);
+            // 检查单位
+            let [name, unit] = key.split('.');
+            let /** @type {?} */ value = styleObj[key];
+            value = value != null && unit ? `${value}${unit}` : value;
+            name = this.humpToHyphen(name);
+            this.render.setStyle(ele, name, value);
         }
     }
     /**
      * @param {?} styles
+     * @param {?=} ele
      * @return {?}
      */
-    removeStyle(styles) {
+    removeStyle(styles, ele) {
+        ele = ele || this.getNative();
         if (type(styles) == 'array' && type(styles) !== 'undefined') {
             styles.map(key => {
-                this.render.removeStyle(this.ele.nativeElement, key);
+                this.render.removeStyle(ele, key);
             });
         }
         else {
-            this.render.removeStyle(this.ele.nativeElement, styles);
+            this.render.removeStyle(ele, styles);
         }
+    }
+    /**
+     * @param {?} str
+     * @return {?}
+     */
+    hyphenToHump(str) {
+        const /** @type {?} */ preg = new RegExp('//-(/w)/g');
+        return str.replace(preg, (all, letter) => {
+            return letter.toUpperCase();
+        });
+    }
+    /**
+     * @param {?} str
+     * @return {?}
+     */
+    humpToHyphen(str) {
+        return str.replace(/([A-Z])/g, "-$1").toLowerCase();
     }
     /**
      * @param {?} name
      * @param {?} value
+     * @param {?=} ele
      * @return {?}
      */
-    addStyle(name, value) {
-        this.render.setStyle(this.ele.nativeElement, name, value);
+    addStyle(name, value, ele) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
+        this.render.setStyle(ele, name, value);
     }
     /**
      * @param {?} name
+     * @param {?=} ele
      * @return {?}
      */
-    addClass(name) {
+    addClass(name, ele) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
         this.render.addClass(this.ele.nativeElement, name);
     }
     /**
      * @param {?} classObj
+     * @param {?=} ele
      * @return {?}
      */
-    setAttribute(classObj) {
+    setAttribute(classObj, ele) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
         for (const /** @type {?} */ key in classObj) {
             if (type(classObj[key]) === 'boolean') {
                 if (classObj[key]) {
-                    this.render.setAttribute(this.ele.nativeElement, key, 'true');
+                    this.render.setAttribute(ele, key, 'true');
                 }
                 else {
-                    this.render.removeAttribute(this.ele.nativeElement, key);
+                    this.render.removeAttribute(ele, key);
                 }
             }
             else {
-                this.render.setAttribute(this.ele.nativeElement, key, classObj[key]);
+                this.render.setAttribute(ele, key, classObj[key]);
             }
         }
     }
     /**
      * @param {?} name
+     * @param {?=} ele
      * @return {?}
      */
-    removeClass(name) {
-        this.render.removeClass(this.ele.nativeElement, name);
+    removeClass(name, ele) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
+        this.render.removeClass(ele, name);
     }
     /**
      * @param {?} changes
@@ -219,7 +298,48 @@ ReactComponent.propDecorators = {
     "propsChange": [{ type: Output },],
     "onClick": [{ type: Output },],
     "_onClick": [{ type: HostListener, args: ['click', ['$event'],] },],
+    "_id": [{ type: HostBinding, args: ['attr.id',] },],
 };
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+/**
+ * @abstract
+ */
+class ReactComponentSetting extends ReactComponent {
+    /**
+     * @param {?} differs
+     * @param {?} ele
+     * @param {?} render
+     * @param {?} fb
+     */
+    constructor(differs, ele, render, fb) {
+        super(differs, ele, render);
+        this.fb = fb;
+        this.form = this.fb.group({});
+    }
+    /**
+     * @return {?}
+     */
+    initStyleForm() {
+        for (const /** @type {?} */ key in this.props["style"]) {
+            this.form.addControl(key, new FormControl(this.props["style"][key]));
+        }
+        this.form.valueChanges.subscribe(res => {
+            this.props["style"] = res;
+            this.onStateChange(res);
+        });
+    }
+    /**
+     * @param {?} res
+     * @return {?}
+     */
+    onStyleChange(res) {
+        this.setStyle(res, this.instance.ele.nativeElement);
+    }
+}
 
 /**
  * @fileoverview added by tsickle
@@ -415,5 +535,5 @@ ReactCommonModule.ctorParameters = () => [];
  * Generated bundle index. Do not edit.
  */
 
-export { ReactComponent, ReactCommonModule, NgComponentDirective as ɵc, NgEachOf as ɵb, NgEachOfContext as ɵa };
+export { ReactComponent, ReactComponentSetting, ReactCommonModule, NgComponentDirective as ɵc, NgEachOf as ɵb, NgEachOfContext as ɵa };
 //# sourceMappingURL=ng-react-component.js.map

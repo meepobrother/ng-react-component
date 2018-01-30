@@ -7,7 +7,13 @@ import {
 import { OnChanges, KeyValueChanges, DoCheck, KeyValueDiffers, SimpleChanges } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
-import { guid } from 'meepo-common';
+
+function guid() {
+    function S4() {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    }
+    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+}
 function type(val): string {
     return typeof val;
 }
@@ -47,7 +53,15 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
     }
     private _stateDiffer: KeyValueDiffer<string, any>;
     private _propsDiffer: KeyValueDiffer<string, any>;
-    guid: string = guid();
+
+    set guid(val: string) {
+        this._id = val;
+    }
+    get guid() {
+        return this._id;
+    }
+    instance: any;
+    @HostBinding('attr.id') _id: string;
     constructor(
         private _differs: KeyValueDiffers,
         public ele: ElementRef,
@@ -59,15 +73,23 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
         this.state = {} as T;
     }
 
+    createGuid() {
+        return guid();
+    }
+
+    getNative() {
+        return this.ele.nativeElement;
+    }
+
     setState(state: T): void {
         this._stateDiffer = this._differs.find(this.state).create();
-        this.state = defaults(this.state, state) as T;
+        this.state = state;
         this.ngDoCheck();
     }
 
     setProps(props: P): void {
         this._propsDiffer = this._differs.find(this.props).create();
-        this.props = defaults(this.props, props) as P;
+        this.props = props;
         this.ngDoCheck();
     }
 
@@ -93,56 +115,97 @@ export abstract class ReactComponent<P extends KeyValue, T extends KeyValue> imp
         }
     }
 
-    setClass(classObj: { [key: string]: boolean }) {
+    setClass(classObj: { [key: string]: boolean }, ele?: HTMLElement) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
         for (const key in classObj) {
             if (classObj[key]) {
-                this.render.addClass(this.ele.nativeElement, key);
+                this.render.addClass(ele, key);
             } else {
-                this.render.removeClass(this.ele.nativeElement, key);
+                this.render.removeClass(ele, key);
             }
         }
     }
 
-    setStyle(styleObj: { [key: string]: string }) {
+    setStyle(styleObj: { [key: string]: string }, ele?: HTMLElement) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
         for (const key in styleObj) {
-            this.render.setStyle(this.ele.nativeElement, key, styleObj[key]);
+            // 检查单位
+            let [name, unit] = key.split('.');
+            let value = styleObj[key];
+            value = value != null && unit ? `${value}${unit}` : value;
+            name = this.humpToHyphen(name);
+            this.render.setStyle(ele, name, value);
         }
     }
 
-    removeStyle(styles: any) {
-        if (type(styles) == 'array') {
+    removeStyle(styles: any, ele?: HTMLElement) {
+        ele = ele || this.getNative();
+        if (type(styles) == 'array' && type(styles) !== 'undefined') {
             styles.map(key => {
-                this.render.removeStyle(this.ele.nativeElement, key);
+                this.render.removeStyle(ele, key);
             });
         } else {
-            this.render.removeStyle(this.ele.nativeElement, styles);
+            this.render.removeStyle(ele, styles);
         }
     }
-
-    addStyle(name: string, value: string) {
-        this.render.setStyle(this.ele.nativeElement, name, value);
+    // 下划线转驼峰
+    hyphenToHump(str: string) {
+        const preg = new RegExp('//-(/w)/g');
+        return str.replace(preg, (all, letter) => {
+            return letter.toUpperCase();
+        });
+    }
+    // 驼峰转下划线
+    humpToHyphen(str: string) {
+        return str.replace(/([A-Z])/g, "-$1").toLowerCase();
     }
 
-    addClass(name: string) {
+    addStyle(name: string, value: string, ele?: HTMLElement) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
+        this.render.setStyle(ele, name, value);
+    }
+
+    addClass(name: string, ele?: HTMLElement) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
         this.render.addClass(this.ele.nativeElement, name);
     }
 
-    setAttribute(classObj: { [key: string]: any }) {
+    setAttribute(classObj: { [key: string]: any }, ele?: HTMLElement) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
         for (const key in classObj) {
             if (type(classObj[key]) === 'boolean') {
                 if (classObj[key]) {
-                    this.render.setAttribute(this.ele.nativeElement, key, 'true');
+                    this.render.setAttribute(ele, key, 'true');
                 } else {
-                    this.render.removeAttribute(this.ele.nativeElement, key);
+                    this.render.removeAttribute(ele, key);
                 }
             } else {
-                this.render.setAttribute(this.ele.nativeElement, key, classObj[key]);
+                this.render.setAttribute(ele, key, classObj[key]);
             }
         }
     }
 
-    removeClass(name: string) {
-        this.render.removeClass(this.ele.nativeElement, name);
+    removeClass(name: string, ele?: HTMLElement) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
+        this.render.removeClass(ele, name);
     }
 
     private _stateChanges(changes: KeyValueChanges<string, T>) {

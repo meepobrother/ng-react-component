@@ -25,24 +25,30 @@ export declare abstract class ReactComponent<P extends KeyValue, T extends KeyVa
     private _stateDiffer;
     private _propsDiffer;
     guid: string;
+    instance: any;
+    _id: string;
     constructor(_differs: KeyValueDiffers, ele: ElementRef, render: Renderer2);
+    createGuid(): string;
+    getNative(): any;
     setState(state: T): void;
     setProps(props: P): void;
     ngOnChanges(changes: SimpleChanges): void;
     ngDoCheck(): void;
     setClass(classObj: {
         [key: string]: boolean;
-    }): void;
+    }, ele?: HTMLElement): string;
     setStyle(styleObj: {
         [key: string]: string;
-    }): void;
-    removeStyle(styles: any): void;
-    addStyle(name: string, value: string): void;
-    addClass(name: string): void;
+    }, ele?: HTMLElement): string;
+    removeStyle(styles: any, ele?: HTMLElement): void;
+    hyphenToHump(str: string): string;
+    humpToHyphen(str: string): string;
+    addStyle(name: string, value: string, ele?: HTMLElement): string;
+    addClass(name: string, ele?: HTMLElement): string;
     setAttribute(classObj: {
         [key: string]: any;
-    }): void;
-    removeClass(name: string): void;
+    }, ele?: HTMLElement): string;
+    removeClass(name: string, ele?: HTMLElement): string;
     private _stateChanges(changes);
     private _propsChanges(changes);
     abstract onPropsChange(changes: KeyValueChanges<string, P>): void;

@@ -1,9 +1,35 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('rxjs/add/operator/share')) :
-	typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'rxjs/add/operator/share'], factory) :
-	(factory((global['ng-react-component'] = {}),global.ng.core));
-}(this, (function (exports,core) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('rxjs/add/operator/share'), require('@angular/forms')) :
+	typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'rxjs/add/operator/share', '@angular/forms'], factory) :
+	(factory((global['ng-react-component'] = {}),global.ng.core,global.Rx.Observable.prototype,global.ng.forms));
+}(this, (function (exports,core,share,forms) { 'use strict';
 
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
 /**
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
@@ -46,7 +72,6 @@ var ReactComponent = /** @class */ (function () {
         this.stateChange = new core.EventEmitter();
         this.propsChange = new core.EventEmitter();
         this.onClick = new core.EventEmitter();
-        this.guid = guid();
         this.props = /** @type {?} */ ({
             children: []
         });
@@ -79,6 +104,35 @@ var ReactComponent = /** @class */ (function () {
      */
     ReactComponent.prototype._onClick = function (e) {
         this.onClick.emit(e);
+    };
+    Object.defineProperty(ReactComponent.prototype, "guid", {
+        /**
+         * @return {?}
+         */
+        get: function () {
+            return this._id;
+        },
+        /**
+         * @param {?} val
+         * @return {?}
+         */
+        set: function (val) {
+            this._id = val;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * @return {?}
+     */
+    ReactComponent.prototype.createGuid = function () {
+        return guid();
+    };
+    /**
+     * @return {?}
+     */
+    ReactComponent.prototype.getNative = function () {
+        return this.ele.nativeElement;
     };
     /**
      * @param {?} state
@@ -129,82 +183,136 @@ var ReactComponent = /** @class */ (function () {
     };
     /**
      * @param {?} classObj
+     * @param {?=} ele
      * @return {?}
      */
-    ReactComponent.prototype.setClass = function (classObj) {
+    ReactComponent.prototype.setClass = function (classObj, ele) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
         for (var /** @type {?} */ key in classObj) {
             if (classObj[key]) {
-                this.render.addClass(this.ele.nativeElement, key);
+                this.render.addClass(ele, key);
             }
             else {
-                this.render.removeClass(this.ele.nativeElement, key);
+                this.render.removeClass(ele, key);
             }
         }
     };
     /**
      * @param {?} styleObj
+     * @param {?=} ele
      * @return {?}
      */
-    ReactComponent.prototype.setStyle = function (styleObj) {
+    ReactComponent.prototype.setStyle = function (styleObj, ele) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
         for (var /** @type {?} */ key in styleObj) {
-            this.render.setStyle(this.ele.nativeElement, key, styleObj[key]);
+            // 检查单位
+            var _a = __read(key.split('.'), 2), name = _a[0], unit = _a[1];
+            var /** @type {?} */ value = styleObj[key];
+            value = value != null && unit ? "" + value + unit : value;
+            name = this.humpToHyphen(name);
+            this.render.setStyle(ele, name, value);
         }
     };
     /**
      * @param {?} styles
+     * @param {?=} ele
      * @return {?}
      */
-    ReactComponent.prototype.removeStyle = function (styles) {
+    ReactComponent.prototype.removeStyle = function (styles, ele) {
         var _this = this;
+        ele = ele || this.getNative();
         if (type(styles) == 'array' && type(styles) !== 'undefined') {
             styles.map(function (key) {
-                _this.render.removeStyle(_this.ele.nativeElement, key);
+                _this.render.removeStyle(ele, key);
             });
         }
         else {
-            this.render.removeStyle(this.ele.nativeElement, styles);
+            this.render.removeStyle(ele, styles);
         }
+    };
+    /**
+     * @param {?} str
+     * @return {?}
+     */
+    ReactComponent.prototype.hyphenToHump = function (str) {
+        var /** @type {?} */ preg = new RegExp('//-(/w)/g');
+        return str.replace(preg, function (all, letter) {
+            return letter.toUpperCase();
+        });
+    };
+    /**
+     * @param {?} str
+     * @return {?}
+     */
+    ReactComponent.prototype.humpToHyphen = function (str) {
+        return str.replace(/([A-Z])/g, "-$1").toLowerCase();
     };
     /**
      * @param {?} name
      * @param {?} value
+     * @param {?=} ele
      * @return {?}
      */
-    ReactComponent.prototype.addStyle = function (name, value) {
-        this.render.setStyle(this.ele.nativeElement, name, value);
+    ReactComponent.prototype.addStyle = function (name, value, ele) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
+        this.render.setStyle(ele, name, value);
     };
     /**
      * @param {?} name
+     * @param {?=} ele
      * @return {?}
      */
-    ReactComponent.prototype.addClass = function (name) {
+    ReactComponent.prototype.addClass = function (name, ele) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
         this.render.addClass(this.ele.nativeElement, name);
     };
     /**
      * @param {?} classObj
+     * @param {?=} ele
      * @return {?}
      */
-    ReactComponent.prototype.setAttribute = function (classObj) {
+    ReactComponent.prototype.setAttribute = function (classObj, ele) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
         for (var /** @type {?} */ key in classObj) {
             if (type(classObj[key]) === 'boolean') {
                 if (classObj[key]) {
-                    this.render.setAttribute(this.ele.nativeElement, key, 'true');
+                    this.render.setAttribute(ele, key, 'true');
                 }
                 else {
-                    this.render.removeAttribute(this.ele.nativeElement, key);
+                    this.render.removeAttribute(ele, key);
                 }
             }
             else {
-                this.render.setAttribute(this.ele.nativeElement, key, classObj[key]);
+                this.render.setAttribute(ele, key, classObj[key]);
             }
         }
     };
     /**
      * @param {?} name
+     * @param {?=} ele
      * @return {?}
      */
-    ReactComponent.prototype.removeClass = function (name) {
-        this.render.removeClass(this.ele.nativeElement, name);
+    ReactComponent.prototype.removeClass = function (name, ele) {
+        ele = ele || this.getNative();
+        if (ele) {
+            return '';
+        }
+        this.render.removeClass(ele, name);
     };
     /**
      * @param {?} changes
@@ -231,7 +339,51 @@ ReactComponent.propDecorators = {
     "propsChange": [{ type: core.Output },],
     "onClick": [{ type: core.Output },],
     "_onClick": [{ type: core.HostListener, args: ['click', ['$event'],] },],
+    "_id": [{ type: core.HostBinding, args: ['attr.id',] },],
 };
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+/**
+ * @abstract
+ */
+var ReactComponentSetting = /** @class */ (function (_super) {
+    __extends(ReactComponentSetting, _super);
+    /**
+     * @param {?} differs
+     * @param {?} ele
+     * @param {?} render
+     * @param {?} fb
+     */
+    function ReactComponentSetting(differs, ele, render, fb) {
+        var _this = _super.call(this, differs, ele, render) || this;
+        _this.fb = fb;
+        _this.form = _this.fb.group({});
+        return _this;
+    }
+    /**
+     * @return {?}
+     */
+    ReactComponentSetting.prototype.initStyleForm = function () {
+        var _this = this;
+        for (var /** @type {?} */ key in this.props["style"]) {
+            this.form.addControl(key, new forms.FormControl(this.props["style"][key]));
+        }
+        this.form.valueChanges.subscribe(function (res) {
+            _this.props["style"] = res;
+            _this.onStateChange(res);
+        });
+    };
+    /**
+     * @param {?} res
+     * @return {?}
+     */
+    ReactComponentSetting.prototype.onStyleChange = function (res) {
+        this.setStyle(res, this.instance.ele.nativeElement);
+    };
+    return ReactComponentSetting;
+}(ReactComponent));
 /**
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
@@ -423,6 +575,7 @@ ReactCommonModule.decorators = [
 ReactCommonModule.ctorParameters = function () { return []; };
 
 exports.ReactComponent = ReactComponent;
+exports.ReactComponentSetting = ReactComponentSetting;
 exports.ReactCommonModule = ReactCommonModule;
 exports.ɵc = NgComponentDirective;
 exports.ɵb = NgEachOf;
