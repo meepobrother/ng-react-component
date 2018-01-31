@@ -558,13 +558,15 @@ class CreateLib {
      * @param {?=} props
      * @param {?=} children
      * @param {?=} state
+     * @param {?=} items
      */
-    constructor(name, title, props = {}, children = [], state = {}) {
+    constructor(name, title, props = {}, children = [], state = {}, items = []) {
         this.name = name;
         this.title = title;
         this.props = props;
         this.children = children;
         this.state = state;
+        this.items = items;
     }
 }
 

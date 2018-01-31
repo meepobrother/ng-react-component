@@ -4,5 +4,6 @@ export declare class CreateLib {
     props: any;
     children: any[];
     state: any;
-    constructor(name: string, title: string, props?: any, children?: any[], state?: any);
+    items: any[];
+    constructor(name: string, title: string, props?: any, children?: any[], state?: any, items?: any[]);
 }

@@ -605,16 +605,19 @@ var CreateLib = /** @class */ (function () {
      * @param {?=} props
      * @param {?=} children
      * @param {?=} state
+     * @param {?=} items
      */
-    function CreateLib(name, title, props, children, state) {
+    function CreateLib(name, title, props, children, state, items) {
         if (props === void 0) { props = {}; }
         if (children === void 0) { children = []; }
         if (state === void 0) { state = {}; }
+        if (items === void 0) { items = []; }
         this.name = name;
         this.title = title;
         this.props = props;
         this.children = children;
         this.state = state;
+        this.items = items;
     }
     return CreateLib;
 }());
