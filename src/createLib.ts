@@ -4,6 +4,7 @@ export class CreateLib {
         public title: string,
         public props: any = {},
         public children: any[] = [],
-        public state: any = {}
+        public state: any = {},
+        public items: any[] = []
     ) { }
 }
