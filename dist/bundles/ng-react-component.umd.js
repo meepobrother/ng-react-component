@@ -102,20 +102,6 @@ var ReactComponent = /** @class */ (function () {
         configurable: true
     });
     /**
-     * @return {?}
-     */
-    ReactComponent.prototype.mouseover = function () {
-        this.props.focus = true;
-        this.onHover.emit(this.props.focus);
-    };
-    /**
-     * @return {?}
-     */
-    ReactComponent.prototype.mouseleave = function () {
-        this.props.focus = false;
-        this.onHover.emit(this.props.focus);
-    };
-    /**
      * 监听click事件
      * @param {?} e
      * @return {?}
@@ -360,8 +346,6 @@ ReactComponent.propDecorators = {
     "propsChange": [{ type: core.Output },],
     "onClick": [{ type: core.Output },],
     "onHover": [{ type: core.Output },],
-    "mouseover": [{ type: core.HostListener, args: ['mouseenter', ['$event'],] },],
-    "mouseleave": [{ type: core.HostListener, args: ['mouseleave', ['$event'],] },],
     "_onClick": [{ type: core.HostListener, args: ['click', ['$event'],] },],
     "_id": [{ type: core.HostBinding, args: ['attr.id',] },],
 };
@@ -379,13 +363,25 @@ var ReactComponentSetting = /** @class */ (function (_super) {
      * @param {?} ele
      * @param {?} render
      * @param {?} fb
+     * @param {?} _props
      */
-    function ReactComponentSetting(differs, ele, render, fb) {
+    function ReactComponentSetting(differs, ele, render, fb, _props) {
         var _this = _super.call(this, differs, ele, render) || this;
         _this.fb = fb;
+        _this._props = _props;
         _this.form = _this.fb.group({});
         return _this;
     }
+    /**
+     * @return {?}
+     */
+    ReactComponentSetting.prototype.ngOnInit = function () {
+        this.instance = this.instance || this._props.instance;
+        if (this.instance) {
+            this.element = this.instance.ele.nativeElement;
+            this.initStyleForm();
+        }
+    };
     /**
      * @return {?}
      */
@@ -400,11 +396,50 @@ var ReactComponentSetting = /** @class */ (function (_super) {
         });
     };
     /**
+     * @param {?} name
+     * @param {?} value
+     * @param {?=} to
+     * @return {?}
+     */
+    ReactComponentSetting.prototype.checkFormField = function (name, value, to) {
+        if (to) {
+            if (!to.contains(name)) {
+                to.addControl(name, new forms.FormControl(value));
+            }
+        }
+        else {
+            if (!this.form.contains(name)) {
+                this.form.addControl(name, new forms.FormControl(value));
+            }
+        }
+    };
+    /**
+     * @param {?} name
+     * @param {?} obj
+     * @return {?}
+     */
+    ReactComponentSetting.prototype.checkFormGroup = function (name, obj) {
+        var /** @type {?} */ group = this.fb.group({});
+        for (var /** @type {?} */ key in obj) {
+            this.checkFormField(key, obj[key], group);
+        }
+        if (!this.form.contains(name)) {
+            this.form.addControl(name, group);
+        }
+    };
+    /**
      * @param {?} res
      * @return {?}
      */
     ReactComponentSetting.prototype.onStyleChange = function (res) {
         this.setStyle(res, this.instance.ele.nativeElement);
+    };
+    /**
+     * @return {?}
+     */
+    ReactComponentSetting.prototype.removeSelf = function () {
+        var /** @type {?} */ props = this._props.getPropsByUid(this.guid);
+        this._props.removePropsByUid(props.uuid);
     };
     return ReactComponentSetting;
 }(ReactComponent));
@@ -607,28 +642,48 @@ var CreateLib = /** @class */ (function () {
      * @param {?} title
      * @param {?=} props
      * @param {?=} children
+     * @param {?=} father
+     * @param {?=} uuid
      * @param {?=} state
      * @param {?=} items
      */
-    function CreateLib(name, title, props, children, state, items) {
+    function CreateLib(name, title, props, children, father, uuid, state, items) {
         if (props === void 0) { props = {}; }
         if (children === void 0) { children = []; }
+        if (father === void 0) { father = null; }
+        if (uuid === void 0) { uuid = null; }
         if (state === void 0) { state = {}; }
         if (items === void 0) { items = []; }
         this.name = name;
         this.title = title;
         this.props = props;
         this.children = children;
+        this.father = father;
+        this.uuid = uuid;
         this.state = state;
         this.items = items;
+        this.uuid = this.uuid || guid$1();
     }
     return CreateLib;
 }());
+/**
+ * @return {?}
+ */
+function guid$1() {
+    /**
+     * @return {?}
+     */
+    function S4() {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    }
+    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+}
 
 exports.ReactComponent = ReactComponent;
 exports.ReactComponentSetting = ReactComponentSetting;
 exports.ReactCommonModule = ReactCommonModule;
 exports.CreateLib = CreateLib;
+exports.uuid = guid$1;
 exports.ɵc = NgComponentDirective;
 exports.ɵb = NgEachOf;
 exports.ɵa = NgEachOfContext;

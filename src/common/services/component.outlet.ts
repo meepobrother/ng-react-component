@@ -4,6 +4,7 @@ import {
     Input, NgModuleFactory, NgModuleRef, OnChanges, OnDestroy,
     SimpleChanges, StaticProvider, Type, ViewContainerRef
 } from '@angular/core';
+
 @Injectable()
 export class ComponentOutletService {
     private _componentRef: ComponentRef<any> | null = null;

@@ -62,16 +62,16 @@ export abstract class ReactComponent<P extends ReactBase, T extends KeyValue> im
     @Output() onClick: EventEmitter<any> = new EventEmitter();
     @Output() onHover: EventEmitter<any> = new EventEmitter();
 
-    @HostListener('mouseenter', ['$event'])
-    mouseover() {
-        this.props.focus = true;
-        this.onHover.emit(this.props.focus);
-    }
-    @HostListener('mouseleave', ['$event'])
-    mouseleave() {
-        this.props.focus = false;
-        this.onHover.emit(this.props.focus);
-    }
+    // @HostListener('mouseenter', ['$event'])
+    // mouseover() {
+    //     this.props.focus = true;
+    //     this.onHover.emit(this.props.focus);
+    // }
+    // @HostListener('mouseleave', ['$event'])
+    // mouseleave() {
+    //     this.props.focus = false;
+    //     this.onHover.emit(this.props.focus);
+    // }
     /**
      * 监听click事件
      * @param e 

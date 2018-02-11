@@ -26,8 +26,6 @@ export declare abstract class ReactComponent<P extends ReactBase, T extends KeyV
     propsChange: EventEmitter<P>;
     onClick: EventEmitter<any>;
     onHover: EventEmitter<any>;
-    mouseover(): void;
-    mouseleave(): void;
     /**
      * 监听click事件
      * @param e

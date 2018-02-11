@@ -68,20 +68,6 @@ class ReactComponent {
         return this.propsChange.share();
     }
     /**
-     * @return {?}
-     */
-    mouseover() {
-        this.props.focus = true;
-        this.onHover.emit(this.props.focus);
-    }
-    /**
-     * @return {?}
-     */
-    mouseleave() {
-        this.props.focus = false;
-        this.onHover.emit(this.props.focus);
-    }
-    /**
      * 监听click事件
      * @param {?} e
      * @return {?}
@@ -320,8 +306,6 @@ ReactComponent.propDecorators = {
     "propsChange": [{ type: Output },],
     "onClick": [{ type: Output },],
     "onHover": [{ type: Output },],
-    "mouseover": [{ type: HostListener, args: ['mouseenter', ['$event'],] },],
-    "mouseleave": [{ type: HostListener, args: ['mouseleave', ['$event'],] },],
     "_onClick": [{ type: HostListener, args: ['click', ['$event'],] },],
     "_id": [{ type: HostBinding, args: ['attr.id',] },],
 };
@@ -339,11 +323,23 @@ class ReactComponentSetting extends ReactComponent {
      * @param {?} ele
      * @param {?} render
      * @param {?} fb
+     * @param {?} _props
      */
-    constructor(differs, ele, render, fb) {
+    constructor(differs, ele, render, fb, _props) {
         super(differs, ele, render);
         this.fb = fb;
+        this._props = _props;
         this.form = this.fb.group({});
+    }
+    /**
+     * @return {?}
+     */
+    ngOnInit() {
+        this.instance = this.instance || this._props.instance;
+        if (this.instance) {
+            this.element = this.instance.ele.nativeElement;
+            this.initStyleForm();
+        }
     }
     /**
      * @return {?}
@@ -358,11 +354,50 @@ class ReactComponentSetting extends ReactComponent {
         });
     }
     /**
+     * @param {?} name
+     * @param {?} value
+     * @param {?=} to
+     * @return {?}
+     */
+    checkFormField(name, value, to) {
+        if (to) {
+            if (!to.contains(name)) {
+                to.addControl(name, new FormControl(value));
+            }
+        }
+        else {
+            if (!this.form.contains(name)) {
+                this.form.addControl(name, new FormControl(value));
+            }
+        }
+    }
+    /**
+     * @param {?} name
+     * @param {?} obj
+     * @return {?}
+     */
+    checkFormGroup(name, obj) {
+        let /** @type {?} */ group = this.fb.group({});
+        for (const /** @type {?} */ key in obj) {
+            this.checkFormField(key, obj[key], group);
+        }
+        if (!this.form.contains(name)) {
+            this.form.addControl(name, group);
+        }
+    }
+    /**
      * @param {?} res
      * @return {?}
      */
     onStyleChange(res) {
         this.setStyle(res, this.instance.ele.nativeElement);
+    }
+    /**
+     * @return {?}
+     */
+    removeSelf() {
+        const /** @type {?} */ props = this._props.getPropsByUid(this.guid);
+        this._props.removePropsByUid(props.uuid);
     }
 }
 
@@ -557,17 +592,34 @@ class CreateLib {
      * @param {?} title
      * @param {?=} props
      * @param {?=} children
+     * @param {?=} father
+     * @param {?=} uuid
      * @param {?=} state
      * @param {?=} items
      */
-    constructor(name, title, props = {}, children = [], state = {}, items = []) {
+    constructor(name, title, props = {}, children = [], father = null, uuid = null, state = {}, items = []) {
         this.name = name;
         this.title = title;
         this.props = props;
         this.children = children;
+        this.father = father;
+        this.uuid = uuid;
         this.state = state;
         this.items = items;
+        this.uuid = this.uuid || guid$1();
     }
+}
+/**
+ * @return {?}
+ */
+function guid$1() {
+    /**
+     * @return {?}
+     */
+    function S4() {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    }
+    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 }
 
 /**
@@ -583,5 +635,5 @@ class CreateLib {
  * Generated bundle index. Do not edit.
  */
 
-export { ReactComponent, ReactComponentSetting, ReactCommonModule, CreateLib, NgComponentDirective as ɵc, NgEachOf as ɵb, NgEachOfContext as ɵa };
+export { ReactComponent, ReactComponentSetting, ReactCommonModule, CreateLib, guid$1 as uuid, NgComponentDirective as ɵc, NgEachOf as ɵb, NgEachOfContext as ɵa };
 //# sourceMappingURL=ng-react-component.js.map

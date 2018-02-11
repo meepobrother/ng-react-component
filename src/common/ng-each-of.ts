@@ -5,13 +5,16 @@ import {
     IterableDiffers, NgIterable, OnChanges, SimpleChanges, TemplateRef,
     TrackByFunction, ViewContainerRef, forwardRef, isDevMode
 } from '@angular/core';
+
 import {
     KeyValueDiffer, KeyValueChanges, KeyValueChangeRecord,
     KeyValueDifferFactory, KeyValueDiffers
 } from '@angular/core';
+
 export interface EachKeyValue<T> {
     [key: string]: T;
 }
+
 export class NgEachOfContext<T> {
     constructor(
         public $implicit: T,

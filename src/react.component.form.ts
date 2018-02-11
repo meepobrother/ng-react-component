@@ -16,6 +16,29 @@ export abstract class ReactComponentForm<P extends ReactFormProps, T extends Key
     ) {
         super(differs, ele, render);
         this.form = this.fb.group({});
+        this.initStyleForm();
+    }
+
+    checkFormField(name: string, value: any, to?: FormGroup) {
+        if (to) {
+            if (!to.contains(name)) {
+                to.addControl(name, new FormControl(value))
+            }
+        } else {
+            if (!this.form.contains(name)) {
+                this.form.addControl(name, new FormControl(value))
+            }
+        }
+    }
+
+    checkFormGroup(name: string, obj: any) {
+        let group = this.fb.group({});
+        for (const key in obj) {
+            this.checkFormField(key, obj[key], group);
+        }
+        if (!this.form.contains(name)) {
+            this.form.addControl(name, group);
+        }
     }
 
     initStyleForm() {
