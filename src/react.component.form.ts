@@ -19,6 +19,17 @@ export abstract class ReactComponentForm<P extends ReactFormProps, T extends Key
         this.initStyleForm();
     }
 
+    objToArray(obj: any) {
+        const arrs: any[] = [];
+        for (const key in obj) {
+            arrs.push({
+                key: key,
+                obj: obj
+            });
+        }
+        return arrs;
+    }
+
     checkFormField(name: string, value: any, to?: FormGroup) {
         if (to) {
             if (!to.contains(name)) {

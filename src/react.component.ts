@@ -2,7 +2,7 @@
 import {
     EventEmitter, NgZone, Input, Output,
     KeyValueDiffer, HostListener, HostBinding, ElementRef,
-    Renderer2
+    Renderer2, isDevMode
 } from '@angular/core';
 import { OnChanges, KeyValueChanges, DoCheck, KeyValueDiffers, SimpleChanges } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
@@ -247,6 +247,74 @@ export abstract class ReactComponent<P extends ReactBase, T extends KeyValue> im
     private _propsChanges(changes) {
         this.onPropsChange(changes);
         this.propsChange.emit(this.props);
+    }
+
+    public createMobileUrl(_do: string, params?: any) {
+        params = params || {};
+        params['do'] = _do;
+        params['c'] = params['c'] || 'entry';
+        params['i'] = params['i'] || '2';
+        console.log(params);
+        let url = this.puts(params);
+        return `${this.getRoot()}/app/index.php${url}`;
+    }
+    public createWebUrl(_do: string, params?: any) {
+        params = params || {};
+        params['do'] = _do;
+        params['c'] = params['c'] || 'site';
+        params['a'] = params['a'] || 'entry';
+        let url = this.puts(params);
+        return `${this.getRoot()}/web/index.php${url}`;
+    }
+
+    private getRoot() {
+        const { origin, protocol, port, host } = window.location;
+        if (isDevMode()) {
+            return `https://meepo.com.cn`;
+        } else {
+            return `${protocol}//${host}`;
+        }
+    }
+
+    private parseURL(): { [k: string]: string } {
+        const ret = {};
+        const seg = location.search.replace(/^\?/, '').split('&').filter(function (v, i) {
+            if (v !== '' && v.indexOf('=')) {
+                return true;
+            }
+        });
+        seg.forEach((element, index) => {
+            const idx = element.indexOf('=');
+            const key = element.substring(0, idx);
+            const val = element.substring(idx + 1);
+            ret[key] = val;
+        });
+        return ret;
+    }
+
+    public get(name: string): string {
+        const parse = this.parseURL();
+        return parse[name] ? parse[name] : '';
+    }
+
+    public put(name: string, value: any, loc?: string) {
+        const parse = this.parseURL();
+        loc = loc || location.search;
+        // 是否有
+        if (loc.indexOf(`${name}=`) > -1) {
+            loc = loc.replace(`${name}=${parse[name]}`, `${name}=${value}`);
+        } else {
+            loc = `${loc}&${name}=${value}`;
+        }
+        return loc;
+    }
+
+    public puts(values: { [k: string]: string }) {
+        let loc = location.search;
+        for (const key in values) {
+            loc = this.put(key, values[key], loc);
+        }
+        return loc;
     }
     abstract onPropsChange(changes: KeyValueChanges<string, P>): void;
     abstract onStateChange(changes: KeyValueChanges<string, T>): void;

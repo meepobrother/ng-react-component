@@ -22,8 +22,18 @@ export abstract class ReactComponentSetting<P extends KeyValue, T extends KeyVal
         this.instance = this.instance || this._props.instance;
         if (this.instance) {
             this.element = this.instance.ele.nativeElement;
-            this.initStyleForm();
         }
+    }
+
+    objToArray(obj: any) {
+        const arrs: any[] = [];
+        for (const key in obj) {
+            arrs.push({
+                key: key,
+                obj: obj
+            });
+        }
+        return arrs;
     }
 
     initStyleForm() {

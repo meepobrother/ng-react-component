@@ -60,6 +60,15 @@ export declare abstract class ReactComponent<P extends ReactBase, T extends KeyV
     removeClass(name: string, ele?: HTMLElement): string;
     private _stateChanges(changes);
     private _propsChanges(changes);
+    createMobileUrl(_do: string, params?: any): string;
+    createWebUrl(_do: string, params?: any): string;
+    private getRoot();
+    private parseURL();
+    get(name: string): string;
+    put(name: string, value: any, loc?: string): string;
+    puts(values: {
+        [k: string]: string;
+    }): string;
     abstract onPropsChange(changes: KeyValueChanges<string, P>): void;
     abstract onStateChange(changes: KeyValueChanges<string, T>): void;
 }

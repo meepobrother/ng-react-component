@@ -6,8 +6,8 @@ import {
     Type, ViewContainerRef, Output, OnInit, ComponentFactory
 } from '@angular/core';
 
-@Directive({ selector: '[ngComponent]' })
-export class NgComponentDirective implements OnInit {
+@Directive({ selector: '[ngComponentPreview]' })
+export class NgComponentPreviewDirective implements OnInit {
     viewContainerRef: any;
     componentRef: ComponentRef<any>;
     moduleRef: any;

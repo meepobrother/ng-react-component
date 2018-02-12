@@ -10,6 +10,7 @@ export declare abstract class ReactComponentSetting<P extends KeyValue, T extend
     element: HTMLElement;
     constructor(differs: KeyValueDiffers, ele: ElementRef, render: Renderer2, fb: FormBuilder, _props: DesignPropsService);
     ngOnInit(): void;
+    objToArray(obj: any): any[];
     initStyleForm(): void;
     checkFormField(name: string, value: any, to?: FormGroup): void;
     checkFormGroup(name: string, obj: any): void;

@@ -1,5 +1,5 @@
 import { ComponentRef, SimpleChanges, ViewContainerRef, OnInit } from '@angular/core';
-export declare class NgComponentDirective implements OnInit {
+export declare class NgComponentPreviewDirective implements OnInit {
     viewContainerRef: any;
     componentRef: ComponentRef<any>;
     moduleRef: any;

@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, Directive, EventEmitter, HostBinding, HostListener, Input, KeyValueDiffers, NgModule, Output, TemplateRef, ViewContainerRef } from '@angular/core';
+import { ComponentFactoryResolver, Directive, EventEmitter, HostBinding, HostListener, Input, KeyValueDiffers, NgModule, Output, TemplateRef, ViewContainerRef, isDevMode } from '@angular/core';
 import 'rxjs/add/operator/share';
 import { FormControl } from '@angular/forms';
 
@@ -298,6 +298,100 @@ class ReactComponent {
         this.onPropsChange(changes);
         this.propsChange.emit(this.props);
     }
+    /**
+     * @param {?} _do
+     * @param {?=} params
+     * @return {?}
+     */
+    createMobileUrl(_do, params) {
+        params = params || {};
+        params['do'] = _do;
+        params['c'] = params['c'] || 'entry';
+        params['i'] = params['i'] || '2';
+        console.log(params);
+        let /** @type {?} */ url = this.puts(params);
+        return `${this.getRoot()}/app/index.php${url}`;
+    }
+    /**
+     * @param {?} _do
+     * @param {?=} params
+     * @return {?}
+     */
+    createWebUrl(_do, params) {
+        params = params || {};
+        params['do'] = _do;
+        params['c'] = params['c'] || 'site';
+        params['a'] = params['a'] || 'entry';
+        let /** @type {?} */ url = this.puts(params);
+        return `${this.getRoot()}/web/index.php${url}`;
+    }
+    /**
+     * @return {?}
+     */
+    getRoot() {
+        const { origin, protocol, port, host } = window.location;
+        if (isDevMode()) {
+            return `https://meepo.com.cn`;
+        }
+        else {
+            return `${protocol}//${host}`;
+        }
+    }
+    /**
+     * @return {?}
+     */
+    parseURL() {
+        const /** @type {?} */ ret = {};
+        const /** @type {?} */ seg = location.search.replace(/^\?/, '').split('&').filter(function (v, i) {
+            if (v !== '' && v.indexOf('=')) {
+                return true;
+            }
+        });
+        seg.forEach((element, index) => {
+            const /** @type {?} */ idx = element.indexOf('=');
+            const /** @type {?} */ key = element.substring(0, idx);
+            const /** @type {?} */ val = element.substring(idx + 1);
+            ret[key] = val;
+        });
+        return ret;
+    }
+    /**
+     * @param {?} name
+     * @return {?}
+     */
+    get(name) {
+        const /** @type {?} */ parse = this.parseURL();
+        return parse[name] ? parse[name] : '';
+    }
+    /**
+     * @param {?} name
+     * @param {?} value
+     * @param {?=} loc
+     * @return {?}
+     */
+    put(name, value, loc) {
+        const /** @type {?} */ parse = this.parseURL();
+        loc = loc || location.search;
+        // 是否有
+        if (loc.indexOf(`${name}=`) > -1) {
+            loc = loc.replace(`${name}=${parse[name]}`, `${name}=${value}`);
+        }
+        else {
+            loc = `${loc}&${name}=${value}`;
+        }
+        return loc;
+    }
+    /**
+     * @param {?} values
+     * @return {?}
+     */
+    puts(values) {
+        let /** @type {?} */ loc = location.search;
+        for (const /** @type {?} */ key in values) {
+            loc = this.put(key, values[key], loc);
+        }
+        return loc;
+    }
 }
 ReactComponent.propDecorators = {
     "state": [{ type: Input },],
@@ -338,8 +432,21 @@ class ReactComponentSetting extends ReactComponent {
         this.instance = this.instance || this._props.instance;
         if (this.instance) {
             this.element = this.instance.ele.nativeElement;
-            this.initStyleForm();
         }
+    }
+    /**
+     * @param {?} obj
+     * @return {?}
+     */
+    objToArray(obj) {
+        const /** @type {?} */ arrs = [];
+        for (const /** @type {?} */ key in obj) {
+            arrs.push({
+                key: key,
+                obj: obj
+            });
+        }
+        return arrs;
     }
     /**
      * @return {?}
@@ -518,7 +625,7 @@ class RecordViewTuple {
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
-class NgComponentDirective {
+class NgComponentPreviewDirective {
     /**
      * @param {?} _viewContainerRef
      */
@@ -548,14 +655,14 @@ class NgComponentDirective {
         }
     }
 }
-NgComponentDirective.decorators = [
-    { type: Directive, args: [{ selector: '[ngComponent]' },] },
+NgComponentPreviewDirective.decorators = [
+    { type: Directive, args: [{ selector: '[ngComponentPreview]' },] },
 ];
 /** @nocollapse */
-NgComponentDirective.ctorParameters = () => [
+NgComponentPreviewDirective.ctorParameters = () => [
     { type: ViewContainerRef, },
 ];
-NgComponentDirective.propDecorators = {
+NgComponentPreviewDirective.propDecorators = {
     "ngComponent": [{ type: Input },],
     "ngComponentInput": [{ type: Input },],
     "Output": [{ type: Output },],
@@ -571,11 +678,11 @@ ReactCommonModule.decorators = [
     { type: NgModule, args: [{
                 exports: [
                     NgEachOf,
-                    NgComponentDirective
+                    NgComponentPreviewDirective
                 ],
                 declarations: [
                     NgEachOf,
-                    NgComponentDirective
+                    NgComponentPreviewDirective
                 ]
             },] },
 ];
@@ -635,5 +742,5 @@ function guid$1() {
  * Generated bundle index. Do not edit.
  */
 
-export { ReactComponent, ReactComponentSetting, ReactCommonModule, CreateLib, guid$1 as uuid, NgComponentDirective as ɵc, NgEachOf as ɵb, NgEachOfContext as ɵa };
+export { ReactComponent, ReactComponentSetting, ReactCommonModule, CreateLib, guid$1 as uuid, NgComponentPreviewDirective as ɵc, NgEachOf as ɵb, NgEachOfContext as ɵa };
 //# sourceMappingURL=ng-react-component.js.map

@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { NgEachOf } from './ng-each-of';
-import { NgComponentDirective } from './ng-component';
+import { NgComponentPreviewDirective } from './ng-component';
 @NgModule({
     exports: [
         NgEachOf,
-        NgComponentDirective
+        NgComponentPreviewDirective
     ],
     declarations: [
         NgEachOf,
-        NgComponentDirective
+        NgComponentPreviewDirective
     ]
 })
 export class ReactCommonModule { }
