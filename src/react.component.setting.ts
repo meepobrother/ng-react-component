@@ -58,6 +58,12 @@ export abstract class ReactComponentSetting<P extends KeyValue, T extends KeyVal
         }
     }
 
+    getFormType(group: FormGroup, name: string) {
+        let control: FormControl = group.get(name) as FormControl;
+        let type: string = typeof control.value;
+        return type;
+    }
+
     checkFormGroup(name: string, obj: any) {
         let group = this.fb.group({});
         for (const key in obj) {

@@ -61,25 +61,12 @@ export abstract class ReactComponent<P extends ReactBase, T extends KeyValue> im
 
     @Output() onClick: EventEmitter<any> = new EventEmitter();
     @Output() onHover: EventEmitter<any> = new EventEmitter();
-
-    // @HostListener('mouseenter', ['$event'])
-    // mouseover() {
-    //     this.props.focus = true;
-    //     this.onHover.emit(this.props.focus);
-    // }
-    // @HostListener('mouseleave', ['$event'])
-    // mouseleave() {
-    //     this.props.focus = false;
-    //     this.onHover.emit(this.props.focus);
-    // }
-    /**
-     * 监听click事件
-     * @param e 
-     */
     @HostListener('click', ['$event'])
     _onClick(e: Event) {
         this.onClick.emit(e);
     }
+
+    @Input() params = {};
     private _stateDiffer: KeyValueDiffer<string, any>;
     private _propsDiffer: KeyValueDiffer<string, any>;
 
@@ -249,22 +236,28 @@ export abstract class ReactComponent<P extends ReactBase, T extends KeyValue> im
         this.propsChange.emit(this.props);
     }
 
-    public createMobileUrl(_do: string, params?: any) {
+    public createMobileUrl(_do: string, params?: any, isDev: boolean = false) {
         params = params || {};
+        params = { ...params, ...this.params };
         params['do'] = _do;
         params['c'] = params['c'] || 'entry';
         params['i'] = params['i'] || '2';
-        console.log(params);
         let url = this.puts(params);
         return `${this.getRoot()}/app/index.php${url}`;
     }
-    public createWebUrl(_do: string, params?: any) {
+    public createWebUrl(_do: string, params?: any, isDev: boolean = false) {
         params = params || {};
+        params = { ...params, ...this.params };
         params['do'] = _do;
         params['c'] = params['c'] || 'site';
         params['a'] = params['a'] || 'entry';
-        let url = this.puts(params);
-        return `${this.getRoot()}/web/index.php${url}`;
+        params['i'] = params['i'] || '2';
+        let url = ``;
+        if (!isDevMode() || isDev) {
+            return `${this.getRoot()}/web/index.php${this.puts(params)}`;
+        } else {
+            return `/assets/data/${params['i']}/web/${_do}.json`
+        }
     }
 
     private getRoot() {

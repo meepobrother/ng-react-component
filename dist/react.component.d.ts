@@ -26,11 +26,8 @@ export declare abstract class ReactComponent<P extends ReactBase, T extends KeyV
     propsChange: EventEmitter<P>;
     onClick: EventEmitter<any>;
     onHover: EventEmitter<any>;
-    /**
-     * 监听click事件
-     * @param e
-     */
     _onClick(e: Event): void;
+    params: {};
     private _stateDiffer;
     private _propsDiffer;
     guid: string;
@@ -60,8 +57,8 @@ export declare abstract class ReactComponent<P extends ReactBase, T extends KeyV
     removeClass(name: string, ele?: HTMLElement): string;
     private _stateChanges(changes);
     private _propsChanges(changes);
-    createMobileUrl(_do: string, params?: any): string;
-    createWebUrl(_do: string, params?: any): string;
+    createMobileUrl(_do: string, params?: any, isDev?: boolean): string;
+    createWebUrl(_do: string, params?: any, isDev?: boolean): string;
     private getRoot();
     private parseURL();
     get(name: string): string;

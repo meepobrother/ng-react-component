@@ -73,6 +73,7 @@ var ReactComponent = /** @class */ (function () {
         this.propsChange = new EventEmitter();
         this.onClick = new EventEmitter();
         this.onHover = new EventEmitter();
+        this.params = {};
         this.props = /** @type {?} */ ({
             children: []
         });
@@ -99,7 +100,6 @@ var ReactComponent = /** @class */ (function () {
         configurable: true
     });
     /**
-     * 监听click事件
      * @param {?} e
      * @return {?}
      */
@@ -337,29 +337,39 @@ var ReactComponent = /** @class */ (function () {
     /**
      * @param {?} _do
      * @param {?=} params
+     * @param {?=} isDev
      * @return {?}
      */
-    ReactComponent.prototype.createMobileUrl = function (_do, params) {
+    ReactComponent.prototype.createMobileUrl = function (_do, params, isDev) {
+        if (isDev === void 0) { isDev = false; }
         params = params || {};
+        params = Object.assign({}, params, this.params);
         params['do'] = _do;
         params['c'] = params['c'] || 'entry';
         params['i'] = params['i'] || '2';
-        console.log(params);
         var /** @type {?} */ url = this.puts(params);
         return this.getRoot() + "/app/index.php" + url;
     };
     /**
      * @param {?} _do
      * @param {?=} params
+     * @param {?=} isDev
      * @return {?}
      */
-    ReactComponent.prototype.createWebUrl = function (_do, params) {
+    ReactComponent.prototype.createWebUrl = function (_do, params, isDev) {
+        if (isDev === void 0) { isDev = false; }
         params = params || {};
+        params = Object.assign({}, params, this.params);
         params['do'] = _do;
         params['c'] = params['c'] || 'site';
         params['a'] = params['a'] || 'entry';
-        var /** @type {?} */ url = this.puts(params);
-        return this.getRoot() + "/web/index.php" + url;
+        params['i'] = params['i'] || '2';
+        if (!isDevMode() || isDev) {
+            return this.getRoot() + "/web/index.php" + this.puts(params);
+        }
+        else {
+            return "/assets/data/" + params['i'] + "/web/" + _do + ".json";
+        }
     };
     /**
      * @return {?}
@@ -438,6 +448,7 @@ ReactComponent.propDecorators = {
     "onClick": [{ type: Output },],
     "onHover": [{ type: Output },],
     "_onClick": [{ type: HostListener, args: ['click', ['$event'],] },],
+    "params": [{ type: Input },],
     "_id": [{ type: HostBinding, args: ['attr.id',] },],
 };
 /**
@@ -516,6 +527,16 @@ var ReactComponentSetting = /** @class */ (function (_super) {
                 this.form.addControl(name, new FormControl(value));
             }
         }
+    };
+    /**
+     * @param {?} group
+     * @param {?} name
+     * @return {?}
+     */
+    ReactComponentSetting.prototype.getFormType = function (group, name) {
+        var /** @type {?} */ control = (group.get(name));
+        var /** @type {?} */ type = typeof control.value;
+        return type;
     };
     /**
      * @param {?} name
@@ -787,11 +808,69 @@ function guid$1() {
  * @suppress {checkTypes} checked by tsc
  */
 /**
+ * @abstract
+ */
+var ReactComponentList = /** @class */ (function (_super) {
+    __extends(ReactComponentList, _super);
+    /**
+     * @param {?} differs
+     * @param {?} ele
+     * @param {?} render
+     */
+    function ReactComponentList(differs, ele, render) {
+        var _this = _super.call(this, differs, ele, render) || this;
+        _this._allChecked = false;
+        _this._indeterminate = false;
+        _this._displayData = [];
+        _this.data = [];
+        return _this;
+    }
+    /**
+     * @param {?} $event
+     * @return {?}
+     */
+    ReactComponentList.prototype._displayDataChange = function ($event) {
+        this._displayData = $event;
+        this._refreshStatus();
+    };
+    /**
+     * @return {?}
+     */
+    ReactComponentList.prototype._refreshStatus = function () {
+        var /** @type {?} */ allChecked = this._displayData.every(function (value) { return value.disabled || value.checked; });
+        var /** @type {?} */ allUnChecked = this._displayData.every(function (value) { return value.disabled || !value.checked; });
+        this._allChecked = allChecked;
+        this._indeterminate = (!allChecked) && (!allUnChecked);
+    };
+    /**
+     * @param {?} value
+     * @return {?}
+     */
+    ReactComponentList.prototype._checkAll = function (value) {
+        if (value) {
+            this._displayData.forEach(function (data) {
+                if (!data.disabled) {
+                    data.checked = true;
+                }
+            });
+        }
+        else {
+            this._displayData.forEach(function (data) { return data.checked = false; });
+        }
+        this._refreshStatus();
+    };
+    return ReactComponentList;
+}(ReactComponent));
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+/**
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
 /**
  * Generated bundle index. Do not edit.
  */
-export { ReactComponent, ReactComponentSetting, ReactCommonModule, CreateLib, guid$1 as uuid, NgComponentPreviewDirective as ɵc, NgEachOf as ɵb, NgEachOfContext as ɵa };
+export { ReactComponent, ReactComponentSetting, ReactCommonModule, CreateLib, guid$1 as uuid, ReactComponentList, NgComponentPreviewDirective as ɵc, NgEachOf as ɵb, NgEachOfContext as ɵa };
 //# sourceMappingURL=ng-react-component.js.map

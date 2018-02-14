@@ -13,6 +13,7 @@ export declare abstract class ReactComponentSetting<P extends KeyValue, T extend
     objToArray(obj: any): any[];
     initStyleForm(): void;
     checkFormField(name: string, value: any, to?: FormGroup): void;
+    getFormType(group: FormGroup, name: string): string;
     checkFormGroup(name: string, obj: any): void;
     onStyleChange(res: any): void;
     removeSelf(): void;
